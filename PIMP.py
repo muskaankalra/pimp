@@ -471,14 +471,12 @@ if __name__=="__main__":
         
     else:
         remoteAddress = mode
-        #control = EchoControl()
         coro = playground.create_connection(lambda: PIMPClientProtocol(), 
             host=remoteAddress, 
             port=102,
             family=stack)
         transport, protocol = loop.run_until_complete(coro)
         print("Pimp Client Connected. Starting UI t:{}. p:{}".format(transport, protocol))
-        #control.connect(protocol)
         loop.run_forever()
         loop.close()
     
