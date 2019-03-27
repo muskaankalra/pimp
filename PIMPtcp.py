@@ -14,10 +14,7 @@ from playground.network.packet.fieldtypes import UINT16,UINT32,STRING,BUFFER,BOO
 from playground.network.packet.fieldtypes.attributes import Optional
 
 class PIMPPacket(PacketType):
-    TYPE_SYN = "SYN"
-    TYPE_ACK = "ACK"
-    TYPE_FIN = "FIN"
-    TYPE_DATA = "DATA"
+
     DEFINITION_IDENTIFIER = "PIMP.Packet"
     DEFINITION_VERSION = "1.0"
     FIELDS = [
@@ -35,7 +32,7 @@ class PIMPPacket(PacketType):
     def Cal_checksum(self):
         self.Checksum = b"0"
         GNByte = self.__serialize__()
-        hash_value = hashlib.sha25()
+        hash_value = hashlib.MD5()
         hash_value.update(GNByte)
         return hash_value.digest()
     
@@ -51,7 +48,11 @@ class PIMPPacket(PacketType):
     @classmethod
     def SynPacket(cls, seq):
         pkt = cls()
-        pkt.Type = cls.TYPE_SYN
+        pkt.ACK = False
+        pkt.RST = False
+        pkt.SYN = True
+        pkt.FIN = False
+        pkt.RTR = False
         pkt.seqNum = seq    #seq = x
         pkt.Cal_checksum()
         return pkt
@@ -59,7 +60,11 @@ class PIMPPacket(PacketType):
     @classmethod
     def SynAckPacket(cls, seq, ack):
         pkt = cls()
-        pkt.Type = cls.TYPE_SYN + cls.TYPE_ACK
+        pkt.ACK = True
+        pkt.RST = False
+        pkt.SYN = True
+        pkt.FIN = False
+        pkt.RTR = False
         pkt.seqNum = seq    #seq = y
         pkt.ackNum = ack    #ack = seq(received) + 1
         pkt.Cal_checksum()
@@ -68,7 +73,11 @@ class PIMPPacket(PacketType):
     @classmethod
     def AckPacket(cls, ack):
         pkt = cls()
-        pkt.Type = cls.TYPE_ACK
+        pkt.ACK = True
+        pkt.RST = False
+        pkt.SYN = False
+        pkt.FIN = False
+        pkt.RTR = False
         pkt.ackNum = ack     #ack = y + 1
         pkt.Cal_checksum()
         return pkt
@@ -76,11 +85,11 @@ class PIMPPacket(PacketType):
     @classmethod
     def DataPacket(cls, seq, data):
         pkt = cls()
-        pkt.Type = cls.TYPE_DATA
         pkt.seqNum = seq
         pkt.data = data
         pkt.Cal_checksum()
         return pkt
+      
 
 class PIMPTransport(StackingTransport):   #inherit the stackingtransport class
     CHUNK_SIZE = 1500    #each packet is
@@ -148,7 +157,7 @@ class PIMPServerProtocol(StackingProtocol):
     103:"SERVER_TRANSMISSION",
     
     301:"CLIENT_INITIAL_SYN",
-    302:"Client_SYN_SENT",
+    302:"CLIENT_SYN_SENT",
     303:"CLIENT_TRANSMISSION",
     304:"CLIENT_FIN_WAIT",
   }
@@ -403,7 +412,7 @@ class EchoControl:
         
     def connect(self, txProtocol):
         self.txProtocol = txProtocol
-        print("Echo Connection to Server Established!")
+        print("PIMP Connection to Server Established!")
         self.txProtocol = txProtocol
         sys.stdout.write("Enter Message: ")
         sys.stdout.flush()
@@ -455,21 +464,21 @@ if __name__=="__main__":
     if mode.lower() == "server":
         coro = playground.create_server(lambda: PIMPServerProtocol(), port=101, family=stack)
         server = loop.run_until_complete(coro)
-        print("Echo Server Started at {}".format(server.sockets[0].gethostname()))
+        print("Pimp Server Started at {}".format(server.sockets[0].gethostname()))
         loop.run_forever()
         loop.close()
         
         
     else:
         remoteAddress = mode
-        control = EchoControl()
-        coro = playground.create_connection(control.buildProtocol, 
+        #control = EchoControl()
+        coro = playground.create_connection(lambda: PIMPClientProtocol(), 
             host=remoteAddress, 
             port=101,
             family=stack)
         transport, protocol = loop.run_until_complete(coro)
-        print("Echo Client Connected. Starting UI t:{}. p:{}".format(transport, protocol))
-        control.connect(protocol)
+        print("Pimp Client Connected. Starting UI t:{}. p:{}".format(transport, protocol))
+        #control.connect(protocol)
         loop.run_forever()
         loop.close()
-        
+    
