@@ -363,7 +363,7 @@ class PIMPClientProtocol(StackingProtocol):
     
   def connection_made(self, transport):
       self.transport = transport
-      if self.state == self.CLIENT_INTIAL_SYN:
+      if self.state == self.CLIENT_INITIAL_SYN:
           self.sendSyn(self.transport)
           self.seqNum += 1
           self.state = self.CLIENT_SYN_SENT
