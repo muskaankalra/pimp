@@ -11,6 +11,7 @@ from playground.network.common import PlaygroundAddress
 from playground.network.common import StackingProtocol, StackingProtocolFactory, StackingTransport
 from playground.network.packet import PacketType
 from playground.network.packet.fieldtypes import UINT16,UINT32,STRING,BUFFER,BOOL
+from playground.network.packet.fieldtypes.attributes import Optional
 
 class PIMPPacket(PacketType):
     TYPE_SYN = "SYN"
