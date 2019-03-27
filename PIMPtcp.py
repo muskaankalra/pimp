@@ -1,14 +1,16 @@
-from playground.network.common import PlaygroundAddress
-from playground.network.packet.fieldtypes import UINT16, STRING, UINT8, UINT32, BUFFER, BOOL
-from playground.network.common import StackingProtocol, StackingProtocolFactory, StackingTransport
-import hashlib
+##====================================================================
+# Assignment: Lab 1 Milestone 1 - Handshake - pimp file
+# Team: GoldenNugget
+# Date: 03-25-2019
+#====================================================================
 
-# MessageDefinition is the base class of all automatically serializable messages
-from playground.network.packet import PacketType
 import playground
-
+import hashlib
 import sys, time, os, logging, asyncio
-#logger = logging.getLogger(__name__)
+from playground.network.common import PlaygroundAddress
+from playground.network.common import StackingProtocol, StackingProtocolFactory, StackingTransport
+from playground.network.packet import PacketType
+from playground.network.packet.fieldtypes import UINT16,UINT32,STRING,BUFFER,BOOL
 
 class PIMPPacket(PacketType):
     TYPE_SYN = "SYN"
@@ -18,21 +20,21 @@ class PIMPPacket(PacketType):
     DEFINITION_IDENTIFIER = "PIMP.Packet"
     DEFINITION_VERSION = "1.0"
     FIELDS = [
-        ("seqNum", UINT32),
-        ("ackNum", UINT32),
-        ("ACK", BOOL),
-        ("RST", BOOL),
-        ("SYN", BOOL),
-        ("FIN", BOOL),
-        ("RTR", BOOL),
-        ("checkSum", BUFFER),
-        ("data", BUFFER)
+        ("seqNum", UINT32({Optional: True})),
+        ("ackNum", UINT32({Optional: True})),
+        ("ACK", BOOL({Optional: True})),
+        ("RST", BOOL({Optional: True})),
+        ("SYN", BOOL({Optional: True})),
+        ("FIN", BOOL({Optional: True})),
+        ("RTR", BOOL({Optional: True})),
+        ("checkSum", BUFFER({Optional: True})),
+        ("data", BUFFER({Optional: True}))
         ]
 
     def Cal_checksum(self):
         self.Checksum = b"0"
         GNByte = self.__serialize__()
-        hash_value = hashlib.sha256()
+        hash_value = hashlib.sha25()
         hash_value.update(GNByte)
         return hash_value.digest()
     
