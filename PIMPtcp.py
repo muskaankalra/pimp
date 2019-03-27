@@ -462,7 +462,7 @@ if __name__=="__main__":
     EnablePresetLogging(PRESET_DEBUG)
     
     if mode.lower() == "server":
-        coro = playground.create_server(lambda: PIMPServerProtocol(), port=101, family=stack)
+        coro = playground.create_server(lambda: PIMPServerProtocol(), port=102, family=stack)
         server = loop.run_until_complete(coro)
         print("Pimp Server Started at {}".format(server.sockets[0].gethostname()))
         loop.run_forever()
@@ -474,7 +474,7 @@ if __name__=="__main__":
         #control = EchoControl()
         coro = playground.create_connection(lambda: PIMPClientProtocol(), 
             host=remoteAddress, 
-            port=101,
+            port=102,
             family=stack)
         transport, protocol = loop.run_until_complete(coro)
         print("Pimp Client Connected. Starting UI t:{}. p:{}".format(transport, protocol))
