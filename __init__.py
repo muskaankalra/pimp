@@ -5,20 +5,8 @@
 #====================================================================
 
 import playground
-from .protocol import PassthroughFactory
-from .ServerProtocol import PIMPServerProtocol
-from .ClientProtocol import PIMPClientProtocol
-from playground.network.common import StackingProtocol, StackingProtocolFactory, StackingTransport
+from .protocol import StackingProtocolFactory
 
-f_client = StackingProtocolFactory(lambda: ClientProtocol())
-
-f_server = StackingProtocolFactory(lambda: ServerProtocol())
-
-ptConnector = playground.Connector(protocolStack=(f_client, f_server))
-
-playground.setConnector("lab1protocol", ptConnector)
-
-
-#passthroughConnector = playground.Connector(protocolStack=(PassthroughFactory(),PassthroughFactory()))
-#playground.setConnector("passthrough", passthroughConnector)
-#playground.setConnector("any_other_name", passthroughConnector)
+pimpConnector = playground.Connector(protocolStack=(PIMPServerProtocol(),PIMPClientProtocol()))
+playground.setConnector("pimp", pimpConnector)
+playground.setConnector("lab1_GoldenNuggetNetSec2019", pimpConnector)
