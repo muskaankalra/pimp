@@ -457,4 +457,10 @@ if __name__=="__main__":
         print("Pimp Client Connected. Starting UI t:{}. p:{}".format(transport, protocol))
         loop.run_forever()
         loop.close()
-    
+PIMPClientFactory = StackingProtocolFactory.CreateFactoryType(
+    lambda: PIMPClientProtocol()
+)
+
+PIMPServerFactory = StackingProtocolFactory.CreateFactoryType(
+    lambda: PIMPServerProtocol()
+)  
