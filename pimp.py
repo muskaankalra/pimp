@@ -35,7 +35,7 @@ class PIMPPacket(PacketType):
         hash_value = hashlib.md5()
         hash_value.update(GNByte)
         return hash_value.digest()
-        
+
     def updateChecksum(self):
     	self.checkSum = self.Cal_checksum()
     
@@ -156,7 +156,7 @@ class PIMPServerProtocol(StackingProtocol):
     0:"DEFAULT",
     100:"CLOSED",
     101:"LISTEN",
-    102:"SERVER_SYN-RECEIVED" ,
+    102:"SERVER_SYN_RECEIVED" ,
     103:"SERVER_TRANSMISSION",
     
     301:"CLIENT_INITIAL_SYN",
@@ -252,13 +252,13 @@ class PIMPServerProtocol(StackingProtocol):
           if isinstance(pkt, PIMPPacket):
               if pkt.verfiyChecksum():   #check whether there is error appeared in any one tcp packet
                   if  pkt.SYN == True and self.state == self.LISTEN:
-                    self.state = self.Server_SYN_RECEIVED
+                    self.state = self.SERVER_SYN_RECEIVED
                     self.client_seqNo = pkt.seqNum + 1
                     SynAck_seqNo  = self.seqNo
                     self.sendSynAck(self.transport,SynAck_seqNo)
                     self.seqNo += 1
                     print("!!!!!!!!!!!!!!!!!!! SYN packet")
-                  elif pkt.ACK == True and self.state == self.Server_SYN_RECEIVED:
+                  elif pkt.ACK == True and self.state == self.SERVER_SYN_RECEIVED:
                     if pkt.ackNum == self.seqNo:
                       self.state = self.SERVER_TRANSMISSION
                       higherTransport = PIMPTransport(self.transport,self)
@@ -441,7 +441,7 @@ if __name__=="__main__":
     EnablePresetLogging(PRESET_DEBUG)
     
     if mode.lower() == "server":
-        coro = playground.create_server(lambda: PIMPServerProtocol(), port=126, family=stack)
+        coro = playground.create_server(lambda: PIMPServerProtocol(), port=107, family=stack)
         server = loop.run_until_complete(coro)
         print("Pimp Server Started at {}".format(server.sockets[0].gethostname()))
         loop.run_forever()
@@ -452,7 +452,7 @@ if __name__=="__main__":
         remoteAddress = mode
         coro = playground.create_connection(lambda: PIMPClientProtocol(), 
             host=remoteAddress, 
-            port=126,
+            port=107,
             family=stack)
         transport, protocol = loop.run_until_complete(coro)
         print("Pimp Client Connected. Starting UI t:{}. p:{}".format(transport, protocol))
