@@ -272,7 +272,7 @@ class PIMPServerProtocol( ):
                   elif (pkt.ACK == True) and (self.state == self.SERVER_TRANSMISSION):
                         self.processAckPkt(pkt)
                   else:
-                    print("Server: Wrong packet: seq num " + str(pkt.seqNum) + ", type")
+                    print("Server: Wrong packet: seq num " + str(pkt.seqNum))
               else:
                   print("Error in packet, checksum mismatch"+ str(pkt.checkSum))
           else:
@@ -397,7 +397,7 @@ class PIMPClientProtocol(StackingProtocol):
                     #elif(pkt. == "DATA") and (self.state == self.CLIENT_TRANSMISSION):
                     #   self.processDatapkt(pkt)  
                     else:
-                      print("Client: Wrong packet: seq num " + pkt.seqNum + ", type")
+                      print("Client: Wrong packet: seq num " + str(pkt.seqNum) + ", type")
                 else:
                   print("Error in packet, checksum mismatch"+ str(pkt.checkSum))
             else:
@@ -457,10 +457,11 @@ if __name__=="__main__":
         print("Pimp Client Connected. Starting UI t:{}. p:{}".format(transport, protocol))
         loop.run_forever()
         loop.close()
+    
 PIMPClientFactory = StackingProtocolFactory.CreateFactoryType(
     lambda: PIMPClientProtocol()
 )
 
 PIMPServerFactory = StackingProtocolFactory.CreateFactoryType(
     lambda: PIMPServerProtocol()
-)  
+)
