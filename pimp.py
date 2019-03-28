@@ -302,7 +302,7 @@ class PIMPClientProtocol(StackingProtocol):
     super().__init__()
     self.seqNum = int.from_bytes(os.urandom(4), byteorder='big')
     self.client_seqNo = None
-    self.state = self.DEFAULT
+    self.state = self.CLIENT_INITIAL_SYN
     self.client_state = self.CLIENT_INITIAL_SYN
     self.receivedDataBuffer = {}
 
