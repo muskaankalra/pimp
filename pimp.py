@@ -56,7 +56,7 @@ class PIMPPacket(PacketType):
         pkt.SYN = True
         pkt.FIN = False
         pkt.RTR = False
-        pkt.seqNum = seq    #seq = x
+        pkt.seqNum = seq    
         pkt.updateChecksum() 
         return pkt
 
@@ -68,8 +68,8 @@ class PIMPPacket(PacketType):
         pkt.SYN = True
         pkt.FIN = False
         pkt.RTR = False
-        pkt.seqNum = seq    #seq = y
-        pkt.ackNum = ack    #ack = seq(received) + 1
+        pkt.seqNum = seq    
+        pkt.ackNum = ack    
         pkt.updateChecksum() 
         return pkt                                                                                                                                                                                                                                                                                                                                                                                                                                                         
 
@@ -81,7 +81,7 @@ class PIMPPacket(PacketType):
         pkt.SYN = False
         pkt.FIN = False
         pkt.RTR = False
-        pkt.ackNum = ack     #ack = y + 1
+        pkt.ackNum = ack     
         pkt.updateChecksum() 
         return pkt
 
@@ -94,28 +94,28 @@ class PIMPPacket(PacketType):
         return pkt
       
 
-class PIMPTransport(StackingTransport):   #inherit the stackingtransport class
-    CHUNK_SIZE = 1500    #each packet is
+class PIMPTransport(StackingTransport):
+    CHUNK_SIZE = 1500    
 
     def __init__(self, transport, protocol=None):
         super().__init__(transport)
-        self.protocol = protocol   #the protocol instance are put in from client or server protocol
+        self.protocol = protocol   
 
-    def write(self, data):    #mimic the stackingtransport class
+    def write(self, data):    
         if self.protocol:
             if not self.protocol.isClosing():
 
                 i = 0
                 index = 0
                 sentData = None
-                while (i < len(data)):   #the serialized http packet is split into several chunks
+                while (i < len(data)):   
                     if (i + self.CHUNK_SIZE < len(data)):
                         sentData = data[i: i + self.CHUNK_SIZE]
                     else:
                         sentData = data[i:]
-                    i += len(sentData)   #the length of sentData is always 38, why is it???
-                    #whether to change the seqNum, depends on the PIMP's definition
-                    pkt = PIMPPacket.DataPacket(self.protocol.seqNum, sentData)   #make a data packet with one chunk bytes
+                    i += len(sentData)  
+                   
+                    pkt = PIMPPacket.DataPacket(self.protocol.seqNum, sentData)   
                     index += 1
                     ackNumber = self.protocol.seqNum + len(sentData)  #the next ack_num we should get for our last sent data packet
 
@@ -123,7 +123,7 @@ class PIMPTransport(StackingTransport):   #inherit the stackingtransport class
                     if len(self.protocol.sentDataCache) <= self.protocol.WINDOW_SIZE:   #there is window space for packet to send immediately
                         print("PIMPTransport: Sending packet {!r}, sequence number: {!r}".format(index, pkt.seqNum))
                         self.protocol.transport.write(pkt.__serialize__())
-                        self.protocol.sentDataCache[ackNumber] = (pkt)  #Removed the Timestamp
+                        self.protocol.sentDataCache[ackNumber] = (pkt)  
 
                     else:
                         print("PIMPTransport: Buffering packet {!r}, sequence number: {!r}".format(index, pkt.seqNum))
@@ -150,8 +150,7 @@ class PIMPTransport(StackingTransport):   #inherit the stackingtransport class
             print("PIMPTransport: Protocol is already closing.")
 
 
-class PIMPServerProtocol(StackingProtocol):
-  #state definitions
+class PIMPServerProtocol( ):
   State_definition = {
     0:"DEFAULT",
     100:"CLOSED",
@@ -178,14 +177,11 @@ class PIMPServerProtocol(StackingProtocol):
     self.client_seqNo = None
     self.state = self.LISTEN
     self.sentDataCache = {}
-    self.receivedDataBuffer = {}   #receive the packet which is out of order
-    # create logger with 'spam_application'
+    self.receivedDataBuffer = {}  
     self.logger = logging.getLogger('transport_log')
     self.logger.setLevel(logging.DEBUG)
-    # create file handler which logs even debug messages
     fd = logging.FileHandler('transport.log')
     fd.setLevel(logging.DEBUG)
-    # create console handler with a higher log level
     ch = logging.StreamHandler()
     ch.setLevel(logging.ERROR)
     formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
@@ -196,13 +192,11 @@ class PIMPServerProtocol(StackingProtocol):
     
   def sendSyn(self,transport):
     synPacket = PIMPPacket.SynPacket(self.seqNo)
-    #logging
     print('Sending SYN packet with Seq Number' + str(self.seqNo))
     transport.write(synPacket.__serialize__())
     
   def sendSynAck(self, transport,SynAck_seqNo):
     synAckPacket = PIMPPacket.SynAckPacket(SynAck_seqNo, self.client_seqNo)
-    #logging
     print('Sending SYN_ACK packet with Seq Number ' + str(SynAck_seqNo) + ' Ack Number ' +  str(self.client_seqNo))
     transport.write(synAckPacket.__serialize__())
   
@@ -217,25 +211,25 @@ class PIMPServerProtocol(StackingProtocol):
     self.transport = transport
   
   def processAckPkt(self,pkt):
-        latestAckNumber = pkt.ackNum  #the ackNum of the last ack packet we get
-        while latestAckNumber in list(self.sentDataCache):  #when there is an ackNum stacked in the sent_buffer
+        latestAckNumber = pkt.ackNum  
+        while latestAckNumber in list(self.sentDataCache):  
             print ("Received ACK for dataSeq: {!r}, removing".format(self.sentDataCache[latestAckNumber][0].seqNum))
-            del self.sentDataCache[latestAckNumber]    #delete the data packet from the sent buffer
+            del self.sentDataCache[latestAckNumber]    
             break
             
   def processDataPkt(self, pkt):
     if self.state == self.CLOSED:
         print("Connection closed")
     else:
-      if pkt.seqNum == self.client_seqNo:  # the data with the seq_num is exactly what we want
-        self.client_seqNo = pkt.seqNum + len(pkt.Data)  # update the ack_num for next packet, y + len(data) -> ack_num
-        self.sendAck(self.transport)  #send the corresponding ack packet
-        self.higherProtocol().data_received(pkt.Data)  # upload the data to higher level
-        while self.client_seqNo in self.receivedDataBuffer:# transmit the packet with higher seq_num than expectation we get before to higher layer
+      if pkt.seqNum == self.client_seqNo:  
+        self.client_seqNo = pkt.seqNum + len(pkt.Data)  
+        self.sendAck(self.transport)  
+        self.higherProtocol().data_received(pkt.Data)  
+        while self.client_seqNo in self.receivedDataBuffer:
               (nextPkt, receive_time) = self.receivedDataBuffer.pop(self.client_seqNo)
-              self.client_seqNo = nextPkt.seqNum + len(nextPkt.Data) # update the ack_num for next packet, y + len(data) -> ack_num
-              self.sendAck(self.transport)  # send the corresponding ack packet
-              self.higherProtocol().data_received(nextPkt.Data)  # upload the data to higher level--http
+              self.client_seqNo = nextPkt.seqNum + len(nextPkt.Data) 
+              self.sendAck(self.transport)  
+              self.higherProtocol().data_received(nextPkt.Data) 
       elif pkt.seqNum > self.client_seqNum:
           print("")
           self.receiveDataBuffer[pkt.seqNum] = (pkt.time.time())
@@ -250,7 +244,7 @@ class PIMPServerProtocol(StackingProtocol):
     self.deserializer.update(data)
     for pkt in self.deserializer.nextPackets():
           if isinstance(pkt, PIMPPacket):
-              if pkt.verfiyChecksum():   #check whether there is error appeared in any one tcp packet
+              if pkt.verfiyChecksum():   
                   if  pkt.SYN == True and self.state == self.LISTEN:
                     self.state = self.SERVER_SYN_RECEIVED
                     self.client_seqNo = pkt.seqNum + 1
@@ -282,7 +276,6 @@ class PIMPServerProtocol(StackingProtocol):
 
         
 class PIMPClientProtocol(StackingProtocol):
-  #state definitions
   State_definition = {
     0:"DEFAULT",
     100:"CLOSED",
@@ -332,11 +325,13 @@ class PIMPClientProtocol(StackingProtocol):
     synPacket = PIMPPacket.SynPacket(self.seqNum)
     #logging
     #self.logger.info('Sending SYN packet with Seq Number' + str(self.seqNum))
+    print('Sending SYN packet with Seq Number' + str(self.seqNo))
     transport.write(synPacket.__serialize__())
     print("Sending SYN packet with Seq Number")
   
   def sendAck(self, transport):
     AckPacket = PIMPPacket.AckPacket(self.client_seqNum)
+    print('Sending ACK packet with Ack Number' + str(self.client_seqNum))
     #self.logger.info('Sending ACK packet with Ack Number' + str(self.client_seqNum))
     transport.write(AckPacket.__serialize__())
   
@@ -443,7 +438,7 @@ if __name__=="__main__":
     EnablePresetLogging(PRESET_DEBUG)
     
     if mode.lower() == "server":
-        coro = playground.create_server(lambda: PIMPServerProtocol(), port=197, family=stack)
+        coro = playground.create_server(lambda: PIMPServerProtocol(), port=107, family=stack)
         server = loop.run_until_complete(coro)
         print("Pimp Server Started at {}".format(server.sockets[0].gethostname()))
         loop.run_forever()
@@ -454,7 +449,7 @@ if __name__=="__main__":
         remoteAddress = mode
         coro = playground.create_connection(lambda: PIMPClientProtocol(), 
             host=remoteAddress, 
-            port=197,
+            port=107,
             family=stack)
         transport, protocol = loop.run_until_complete(coro)
         print("Pimp Client Connected. Starting UI t:{}. p:{}".format(transport, protocol))
