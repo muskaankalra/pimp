@@ -257,10 +257,11 @@ class PIMPServerProtocol(StackingProtocol):
                     SynAck_seqNo  = self.seqNo
                     self.sendSynAck(self.transport,SynAck_seqNo)
                     self.seqNo += 1
-                    print("!!!!!!!!!!!!!!!!!!! SYN packet")
+                    print("!!!!!!!!!!!!!!!!!!! Receive SYN packet")
                   elif pkt.ACK == True and self.state == self.SERVER_SYN_RECEIVED:
                     if pkt.ackNum == self.seqNo:
                       self.state = self.SERVER_TRANSMISSION
+                      print("!!!!!!!!!!!!!!!!!!! Receive ACK packet")
                       #higherTransport = PIMPTransport(self.transport,self)
                       #self.higherProtocol().connection_made(higherTransport)
                       # self.processDataPkt(pkt)
@@ -389,7 +390,7 @@ class PIMPClientProtocol(StackingProtocol):
                           self.client_seqNum = pkt.seqNum + 1
                           self.sendAck(self.transport)
                           higherTransport = PIMPTransport(self.transport, self)
-                          
+                          print("!!!!!!!!!!!!!!!!!!! Receive SYN+ACK packet")
                         else:
                           print("")
                       
@@ -442,7 +443,7 @@ if __name__=="__main__":
     EnablePresetLogging(PRESET_DEBUG)
     
     if mode.lower() == "server":
-        coro = playground.create_server(lambda: PIMPServerProtocol(), port=187, family=stack)
+        coro = playground.create_server(lambda: PIMPServerProtocol(), port=197, family=stack)
         server = loop.run_until_complete(coro)
         print("Pimp Server Started at {}".format(server.sockets[0].gethostname()))
         loop.run_forever()
@@ -453,7 +454,7 @@ if __name__=="__main__":
         remoteAddress = mode
         coro = playground.create_connection(lambda: PIMPClientProtocol(), 
             host=remoteAddress, 
-            port=187,
+            port=197,
             family=stack)
         transport, protocol = loop.run_until_complete(coro)
         print("Pimp Client Connected. Starting UI t:{}. p:{}".format(transport, protocol))
