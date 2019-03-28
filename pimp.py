@@ -170,6 +170,7 @@ class PIMPServerProtocol(StackingProtocol):
 
   def __init__(self):
     super().__init__()
+    self.deserializer = PIMPPacket.Deserializer()
     self.seqNo = int.from_bytes(os.urandom(4), byteorder='big')
     self.client_seqNo = None
     self.state = self.LISTEN
@@ -300,6 +301,7 @@ class PIMPClientProtocol(StackingProtocol):
   
   def __init__(self):
     super().__init__()
+    self.deserializer = PIMPPacket.Deserializer()
     self.seqNum = int.from_bytes(os.urandom(4), byteorder='big')
     self.client_seqNo = None
     self.state = self.CLIENT_INITIAL_SYN
@@ -436,7 +438,7 @@ if __name__=="__main__":
     EnablePresetLogging(PRESET_DEBUG)
     
     if mode.lower() == "server":
-        coro = playground.create_server(lambda: PIMPServerProtocol(), port=105, family=stack)
+        coro = playground.create_server(lambda: PIMPServerProtocol(), port=106, family=stack)
         server = loop.run_until_complete(coro)
         print("Pimp Server Started at {}".format(server.sockets[0].gethostname()))
         loop.run_forever()
@@ -447,7 +449,7 @@ if __name__=="__main__":
         remoteAddress = mode
         coro = playground.create_connection(lambda: PIMPClientProtocol(), 
             host=remoteAddress, 
-            port=105,
+            port=106,
             family=stack)
         transport, protocol = loop.run_until_complete(coro)
         print("Pimp Client Connected. Starting UI t:{}. p:{}".format(transport, protocol))
