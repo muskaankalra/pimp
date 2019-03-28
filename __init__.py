@@ -5,7 +5,6 @@
 #====================================================================
 
 import playground
-from .protocol import StackingProtocolFactory
 from .pimp import PIMPServerProtocol,PIMPClientProtocol
 
 pimpConnector = playground.Connector(protocolStack=(PIMPServerProtocol(),PIMPClientProtocol()))
