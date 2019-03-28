@@ -192,17 +192,17 @@ class PIMPServerProtocol( ):
     
   def sendSyn(self,transport):
     synPacket = PIMPPacket.SynPacket(self.seqNo)
-    print('Sending SYN packet with Seq Number' + str(self.seqNo))
+    print('!!!!!!!!!!!!!!!!!!!!!!!!!!!Sending SYN packet with Seq Number' + str(self.seqNo))
     transport.write(synPacket.__serialize__())
     
   def sendSynAck(self, transport,SynAck_seqNo):
     synAckPacket = PIMPPacket.SynAckPacket(SynAck_seqNo, self.client_seqNo)
-    print('Sending SYN_ACK packet with Seq Number ' + str(SynAck_seqNo) + ' Ack Number ' +  str(self.client_seqNo))
+    print('!!!!!!!!!!!!!!!!!!!!!!!!!!Sending SYN_ACK packet with Seq Number ' + str(SynAck_seqNo) + ' Ack Number ' +  str(self.client_seqNo))
     transport.write(synAckPacket.__serialize__())
   
   def sendAck(self, transport):
     AckPacket = PIMPPacket.AckPacket(self.client_seqNo)
-    print('Sending ACK packet with Ack Number' + str(self.client_seqNo))
+    print('!!!!!!!!!!!!!!!!!!!!!!!!!Sending ACK packet with Ack Number' + str(self.client_seqNo))
     transport.write(AckPacket.__serialize__())
     
   #def sendFin(self, transport):
@@ -328,13 +328,12 @@ class PIMPClientProtocol(StackingProtocol):
     synPacket = PIMPPacket.SynPacket(self.seqNum)
     #logging
     #self.logger.info('Sending SYN packet with Seq Number' + str(self.seqNum))
-    print('Sending SYN packet with Seq Number' + str(self.seqNum))
+    print('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!Sending SYN packet with Seq Number' + str(self.seqNum))
     transport.write(synPacket.__serialize__())
-    print("Sending SYN packet with Seq Number")
   
   def sendAck(self, transport):
     AckPacket = PIMPPacket.AckPacket(self.client_seqNum)
-    print('Sending ACK packet with Ack Number' + str(self.client_seqNo))
+    print('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!Sending ACK packet with Ack Number' + str(self.client_seqNo))
     #self.logger.info('Sending ACK packet with Ack Number' + str(self.client_seqNum))
     transport.write(AckPacket.__serialize__())
   
@@ -441,7 +440,7 @@ if __name__=="__main__":
     EnablePresetLogging(PRESET_DEBUG)
     
     if mode.lower() == "server":
-        coro = playground.create_server(lambda: PIMPServerProtocol(), port=308, family=stack)
+        coro = playground.create_server(lambda: PIMPServerProtocol(), port=317, family=stack)
         server = loop.run_until_complete(coro)
         print("Pimp Server Started at {}".format(server.sockets[0].gethostname()))
         loop.run_forever()
@@ -452,7 +451,7 @@ if __name__=="__main__":
         remoteAddress = mode
         coro = playground.create_connection(lambda: PIMPClientProtocol(), 
             host=remoteAddress, 
-            port=308,
+            port=317,
             family=stack)
         transport, protocol = loop.run_until_complete(coro)
         print("Pimp Client Connected. Starting UI t:{}. p:{}".format(transport, protocol))
