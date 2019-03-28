@@ -403,34 +403,7 @@ class PIMPClientProtocol(StackingProtocol):
     self.logging.info()
     self.transport = None
 
-class EchoControl:
-    def __init__(self):
-        self.txProtocol = None
-        
-    def buildProtocol(self):
-        return PIMPClientProtocol(self.callback)
-        
-    def connect(self, txProtocol):
-        self.txProtocol = txProtocol
-        print("PIMP Connection to Server Established!")
-        self.txProtocol = txProtocol
-        sys.stdout.write("Enter Message: ")
-        sys.stdout.flush()
-        asyncio.get_event_loop().add_reader(sys.stdin, self.stdinAlert)
-        
-    def callback(self, message):
-        print("Server Response: {}".format(message))
-        sys.stdout.write("\nEnter Message: ")
-        sys.stdout.flush()
-        
-    def stdinAlert(self):
-        data = sys.stdin.readline()
-        if data and data[-1] == "\n":
-            data = data[:-1] # strip off \n
-        self.txProtocol.send(data)
-
-        
-
+       
 USAGE = """usage: echotest <mode> [-stack=<stack_name>]
   mode is either 'server' or a server's address (client mode)"""
 
