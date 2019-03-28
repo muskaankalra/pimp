@@ -326,6 +326,7 @@ class PIMPClientProtocol(StackingProtocol):
     #logging
     self.logger.info('Sending SYN packet with Seq Number' + str(self.seqNum))
     transport.write(synPacket.__serialize__())
+    print("Sending SYN packet with Seq Number")
   
   def sendAck(self, transport):
     AckPacket = PIMPPacket.AckPacket(self.client_seqNum)
