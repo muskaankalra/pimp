@@ -5,8 +5,8 @@
 #====================================================================
 
 import playground
-from .pimp import PIMPServerProtocol,PIMPClientProtocol
+from .pimp import PIMPServerFactory,PIMPClientFactory
 
-pimpConnector = playground.Connector(protocolStack=(PIMPServerProtocol(),PIMPClientProtocol()))
+pimpConnector = playground.Connector(protocolStack=(PIMPServerFactory(),PIMPClientFactory()))
 playground.setConnector("pimp", pimpConnector)
 playground.setConnector("lab1_GoldenNuggetNetSec2019", pimpConnector)
