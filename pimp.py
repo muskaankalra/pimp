@@ -249,16 +249,17 @@ class PIMPServerProtocol( ):
           if isinstance(pkt, PIMPPacket):
               if pkt.verfiyChecksum():   
                   if  pkt.SYN == True and self.state == self.LISTEN:
+                  	print("!!!!!!!!!!!!!!!!!!! Receive SYN packet" + str(pkt.seqNum))
                     self.state = self.SERVER_SYN_RECEIVED
                     self.client_seqNo = pkt.seqNum + 1
                     SynAck_seqNo  = self.seqNo
                     self.sendSynAck(self.transport,SynAck_seqNo)
                     self.seqNo += 1
-                    print("!!!!!!!!!!!!!!!!!!! Receive SYN packet")
                   elif pkt.ACK == True and self.state == self.SERVER_SYN_RECEIVED:
                     if pkt.ackNum == self.seqNo:
+                      print("!!!!!!!!!!!!!!!!!!! Receive ACK packet"+str(pkt.ackNum))
                       self.state = self.SERVER_TRANSMISSION
-                      print("!!!!!!!!!!!!!!!!!!! Receive ACK packet")
+       
                       #higherTransport = PIMPTransport(self.transport,self)
                       #self.higherProtocol().connection_made(higherTransport)
                       # self.processDataPkt(pkt)
@@ -382,12 +383,11 @@ class PIMPClientProtocol(StackingProtocol):
                     if (pkt.SYN == True) and (pkt.ACK == True) and (self.state == self.CLIENT_SYN_SENT):
                             # check ack num
                         if(pkt.ackNum == self.seqNum):
-                          print("SYN-ACK with sequence number" + str(pkt.seqNum) + ", ack number" + str(pkt.ackNum))
+                          print("!!!!!!!!!!!!!!SYN-ACK with sequence number" + str(pkt.seqNum) + ", ack number" + str(pkt.ackNum))
                           self.state = self.CLIENT_TRANSMISSION
                           self.client_seqNum = pkt.seqNum + 1
                           self.sendAck(self.transport)
                           higherTransport = PIMPTransport(self.transport, self)
-                          print("!!!!!!!!!!!!!!!!!!! Receive SYN+ACK packet")
                         else:
                           print("")
                       
