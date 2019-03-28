@@ -30,16 +30,16 @@ class PIMPPacket(PacketType):
         ]
 
     def Cal_checksum(self):
-        self.Checksum = b"0"
+        self.checkSum = b"0"
         GNByte = self.__serialize__()
         hash_value = hashlib.md5()
         hash_value.update(GNByte)
         return hash_value.digest()
     
     def verfiyChecksum(self):
-      oldChksum = self.Checksum
+      oldChksum = self.checkSum
       newChksum = self.Cal_checksum()
-      self.Checksum = newChksum
+      self.checkSum = newChksum
       if oldChksum == newChksum:
         return True
       else:
@@ -271,7 +271,7 @@ class PIMPServerProtocol(StackingProtocol):
                   else:
                     self.logging.info("Server: Wrong packet: seq num " + pkt.seqNum + ", type")
               else:
-                  self.logging.info("Error in packet, checksum mismatch"+ str(pkt.Checksum))
+                  self.logging.info("Error in packet, checksum mismatch"+ str(pkt.checkSum))
           else:
                self.logging.info("Wrong packet class type "+ str(type(pkt)))
 
@@ -397,7 +397,7 @@ class PIMPClientProtocol(StackingProtocol):
                     else:
                       self.logging.info("Client: Wrong packet: seq num " + pkt.seqNum + ", type")
                 else:
-                  self.logging.info("Error in packet, checksum mismatch"+ str(pkt.Checksum))
+                  self.logging.info("Error in packet, checksum mismatch"+ str(pkt.checkSum))
             else:
                self.logging.info("Wrong packet class type "+ str(type(pkt)))
   
@@ -438,7 +438,7 @@ if __name__=="__main__":
     EnablePresetLogging(PRESET_DEBUG)
     
     if mode.lower() == "server":
-        coro = playground.create_server(lambda: PIMPServerProtocol(), port=107, family=stack)
+        coro = playground.create_server(lambda: PIMPServerProtocol(), port=108, family=stack)
         server = loop.run_until_complete(coro)
         print("Pimp Server Started at {}".format(server.sockets[0].gethostname()))
         loop.run_forever()
@@ -449,7 +449,7 @@ if __name__=="__main__":
         remoteAddress = mode
         coro = playground.create_connection(lambda: PIMPClientProtocol(), 
             host=remoteAddress, 
-            port=107,
+            port=108,
             family=stack)
         transport, protocol = loop.run_until_complete(coro)
         print("Pimp Client Connected. Starting UI t:{}. p:{}".format(transport, protocol))
