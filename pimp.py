@@ -250,7 +250,7 @@ class PIMPServerProtocol( ):
               if pkt.verfiyChecksum():   
                   if  pkt.SYN == True and self.state == self.LISTEN:
                   	print("!!!!!!!!!!!!!!!!!!! Receive SYN packet")
-                    self.state = self.SERVER_SYN_RECEIVED
+                  	self.state = self.SERVER_SYN_RECEIVED
                     self.client_seqNo = pkt.seqNum + 1
                     SynAck_seqNo  = self.seqNo
                     self.sendSynAck(self.transport,SynAck_seqNo)
