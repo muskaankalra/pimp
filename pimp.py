@@ -272,7 +272,7 @@ class PIMPServerProtocol( ):
                   elif (pkt.ACK == True) and (self.state == self.SERVER_TRANSMISSION):
                         self.processAckPkt(pkt)
                   else:
-                    print("Server: Wrong packet: seq num " + pkt.seqNum + ", type")
+                    print("Server: Wrong packet: seq num " + str(pkt.seqNum) + ", type")
               else:
                   print("Error in packet, checksum mismatch"+ str(pkt.checkSum))
           else:
