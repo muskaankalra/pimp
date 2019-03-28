@@ -35,6 +35,9 @@ class PIMPPacket(PacketType):
         hash_value = hashlib.md5()
         hash_value.update(GNByte)
         return hash_value.digest()
+        
+    def updateChecksum(self):
+    	self.checkSum = self.Cal_checksum()
     
     def verfiyChecksum(self):
       oldChksum = self.checkSum
@@ -54,7 +57,7 @@ class PIMPPacket(PacketType):
         pkt.FIN = False
         pkt.RTR = False
         pkt.seqNum = seq    #seq = x
-        pkt.Cal_checksum()
+        pkt.updateChecksum() 
         return pkt
 
     @classmethod
@@ -67,7 +70,7 @@ class PIMPPacket(PacketType):
         pkt.RTR = False
         pkt.seqNum = seq    #seq = y
         pkt.ackNum = ack    #ack = seq(received) + 1
-        pkt.Cal_checksum()
+        pkt.updateChecksum() 
         return pkt                                                                                                                                                                                                                                                                                                                                                                                                                                                         
 
     @classmethod
@@ -79,7 +82,7 @@ class PIMPPacket(PacketType):
         pkt.FIN = False
         pkt.RTR = False
         pkt.ackNum = ack     #ack = y + 1
-        pkt.Cal_checksum()
+        pkt.updateChecksum() 
         return pkt
 
     @classmethod
@@ -87,7 +90,7 @@ class PIMPPacket(PacketType):
         pkt = cls()
         pkt.seqNum = seq
         pkt.data = data
-        pkt.Cal_checksum()
+        pkt.updateChecksum() 
         return pkt
       
 
@@ -254,7 +257,7 @@ class PIMPServerProtocol(StackingProtocol):
                     SynAck_seqNo  = self.seqNo
                     self.sendSynAck(self.transport,SynAck_seqNo)
                     self.seqNo += 1
-                    print("!!!!!!!!!!!!!!!!!!! SYN packet received")
+                    print("!!!!!!!!!!!!!!!!!!! SYN packet")
                   elif pkt.ACK == True and self.state == self.Server_SYN_RECEIVED:
                     if pkt.ackNum == self.seqNo:
                       self.state = self.SERVER_TRANSMISSION
@@ -438,7 +441,7 @@ if __name__=="__main__":
     EnablePresetLogging(PRESET_DEBUG)
     
     if mode.lower() == "server":
-        coro = playground.create_server(lambda: PIMPServerProtocol(), port=113, family=stack)
+        coro = playground.create_server(lambda: PIMPServerProtocol(), port=126, family=stack)
         server = loop.run_until_complete(coro)
         print("Pimp Server Started at {}".format(server.sockets[0].gethostname()))
         loop.run_forever()
@@ -449,7 +452,7 @@ if __name__=="__main__":
         remoteAddress = mode
         coro = playground.create_connection(lambda: PIMPClientProtocol(), 
             host=remoteAddress, 
-            port=113,
+            port=126,
             family=stack)
         transport, protocol = loop.run_until_complete(coro)
         print("Pimp Client Connected. Starting UI t:{}. p:{}".format(transport, protocol))
