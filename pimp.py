@@ -271,7 +271,7 @@ class PIMPServerProtocol(StackingProtocol):
                   else:
                     self.logging.info("Server: Wrong packet: seq num " + pkt.seqNum + ", type" + pkt.Type)
               else:
-                  self.logging.info("Error in packet, checksum mismatch"+ str(pkt.Checksum))
+                  self.logging.info("Error in packet, checksum mismatch"+ str(pkt.checkSum))
           else:
                self.logging.info("Wrong packet class type "+ str(type(pkt)))
 
