@@ -239,7 +239,10 @@ class PIMPServerProtocol( ):
           ackNum = pkt.seqNum + len(pkt.Data)
           self.sendAck(self.transport) 
 
-  
+  def connection_lost(self, error):
+    self.higherProtocol().connection_lost(error)
+    print("")
+    self.transport = None
   def data_received(self,data):
     self.deserializer.update(data)
     for pkt in self.deserializer.nextPackets():
