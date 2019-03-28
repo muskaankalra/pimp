@@ -248,13 +248,13 @@ class PIMPServerProtocol(StackingProtocol):
     for pkt in self.deserializer.nextPackets():
           if isinstance(pkt, PIMPPacket):
               if pkt.verfiyChecksum():   #check whether there is error appeared in any one tcp packet
-                  if  pkt.Type == "SYN" and self.state == self.LISTEN:
+                  if  pkt.SYN == True and self.state == self.LISTEN:
                     self.state = self.Server_SYN_RECEIVED
                     self.client_seqNo = pkt.seqNum + 1
                     SynAck_seqNo  = self.seqNo
                     self.sendSynAck(self.transport,SynAck_seqNo)
                     self.seqNo += 1
-                  elif pkt.Type == "ACK" and self.state == self.Server_SYN_RECEIVED:
+                  elif pkt.ACK == True and self.state == self.Server_SYN_RECEIVED:
                     if pkt.ackNum == self.seqNo:
                       self.state = self.SERVER_TRANSMISSION
                       higherTransport = PIMPTransport(self.transport,self)
@@ -263,15 +263,15 @@ class PIMPServerProtocol(StackingProtocol):
                     else:
                       print("Server: Wrong ACK packet: ACK number: {!r}, expected: {!r}".format(
                                     pkt.ackNum, self.seqNo))
-                  elif (pkt.Type == "DATA") and (self.state == self.SERVER_TRANSMISSION):
-                        self.processDataPkt(pkt)
+                  #elif (pkt == "DATA") and (self.state == self.SERVER_TRANSMISSION):
+                   #     self.processDataPkt(pkt)
                                     
-                  elif (pkt.Type == "ACK") and (self.state == self.SERVER_TRANSMISSION):
+                  elif (pkt.ACK == True) and (self.state == self.SERVER_TRANSMISSION):
                         self.processAckPkt(pkt)
                   else:
-                    self.logging.info("Server: Wrong packet: seq num " + pkt.seqNum + ", type" + pkt.Type)
+                    self.logging.info("Server: Wrong packet: seq num " + pkt.seqNum + ", type")
               else:
-                  self.logging.info("Error in packet, checksum mismatch"+ str(pkt.checkSum))
+                  self.logging.info("Error in packet, checksum mismatch"+ str(pkt.Checksum))
           else:
                self.logging.info("Wrong packet class type "+ str(type(pkt)))
 
@@ -377,7 +377,7 @@ class PIMPClientProtocol(StackingProtocol):
      for pkt in self.deserializer.nextPackets():
             if isinstance(pkt, PIMPPacket):   #check if this packet is an instance of PIMPPacket
                 if pkt.verfiyChecksum():
-                    if ("SYN" in pkt.Type) and ("ACK" in pkt.Type) and (self.state == self.CLIENT_SYN_SENT):
+                    if (pkt.SYN == True) and (pkt.ACK == True) and (self.state == self.CLIENT_SYN_SENT):
                             # check ack num
                         if(pkt.ackNum == self.seqNum):
                           self.logging.info("SYN-ACK with sequence number" + str(pkt.seqNum) + ", ack number" + str(pkt.ackNum))
@@ -389,13 +389,13 @@ class PIMPClientProtocol(StackingProtocol):
                         else:
                           self.logging.info()
                       
-                    elif(pkt.Type == "ACK") and (self.state == self.CLIENT_TRANSMISSION):
+                    elif(pkt.ACK == True) and (self.state == self.CLIENT_TRANSMISSION):
                        self.processAckpkt(pkt)
                     
-                    elif(pkt.Type == "DATA") and (self.state == self.CLIENT_TRANSMISSION):
-                       self.processDatapkt(pkt)  
+                    #elif(pkt. == "DATA") and (self.state == self.CLIENT_TRANSMISSION):
+                    #   self.processDatapkt(pkt)  
                     else:
-                      self.logging.info("Client: Wrong packet: seq num " + pkt.seqNum + ", type" + pkt.Type)
+                      self.logging.info("Client: Wrong packet: seq num " + pkt.seqNum + ", type")
                 else:
                   self.logging.info("Error in packet, checksum mismatch"+ str(pkt.Checksum))
             else:
