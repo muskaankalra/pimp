@@ -249,15 +249,16 @@ class PIMPServerProtocol( ):
           if isinstance(pkt, PIMPPacket):
               if pkt.verfiyChecksum():   
                   if  pkt.SYN == True and self.state == self.LISTEN:
-                  	print("!!!!!!!!!!!!!!!!!!! Receive SYN packet" + str(pkt.seqNum))
+                  	print("!!!!!!!!!!!!!!!!!!! Receive SYN packet")
                     self.state = self.SERVER_SYN_RECEIVED
                     self.client_seqNo = pkt.seqNum + 1
                     SynAck_seqNo  = self.seqNo
                     self.sendSynAck(self.transport,SynAck_seqNo)
                     self.seqNo += 1
+
                   elif pkt.ACK == True and self.state == self.SERVER_SYN_RECEIVED:
                     if pkt.ackNum == self.seqNo:
-                      print("!!!!!!!!!!!!!!!!!!! Receive ACK packet"+str(pkt.ackNum))
+                      print("!!!!!!!!!!!!!!!!!!! Receive ACK packet")
                       self.state = self.SERVER_TRANSMISSION
        
                       #higherTransport = PIMPTransport(self.transport,self)
