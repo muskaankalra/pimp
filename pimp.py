@@ -172,7 +172,7 @@ class PIMPServerProtocol(StackingProtocol):
     super().__init__()
     self.seqNo = int.from_bytes(os.urandom(4), byteorder='big')
     self.client_seqNo = None
-    self.state = self.DEFAULT
+    self.state = self.LISTEN
     self.sentDataCache = {}
     self.receivedDataBuffer = {}   #receive the packet which is out of order
     # create logger with 'spam_application'
