@@ -222,7 +222,7 @@ class PIMPServerProtocol(StackingProtocol):
             
   def processDataPkt(self, pkt):
     if self.state == self.CLOSED:
-        self.logging.info("Connection closed")
+        print("Connection closed")
     else:
       if pkt.seqNum == self.client_seqNo:  # the data with the seq_num is exactly what we want
         self.client_seqNo = pkt.seqNum + len(pkt.Data)  # update the ack_num for next packet, y + len(data) -> ack_num
@@ -234,11 +234,11 @@ class PIMPServerProtocol(StackingProtocol):
               self.sendAck(self.transport)  # send the corresponding ack packet
               self.higherProtocol().data_received(nextPkt.Data)  # upload the data to higher level--http
       elif pkt.seqNum > self.client_seqNum:
-          self.logging.info()
+          print("")
           self.receiveDataBuffer[pkt.seqNum] = (pkt.time.time())
 
       else:
-          self.logging.info("")
+          print("")
           ackNum = pkt.seqNum + len(pkt.Data)
           self.sendAck(self.transport) 
 
@@ -261,19 +261,18 @@ class PIMPServerProtocol(StackingProtocol):
                       self.higherProtocol().connection_made(higherTransport)
                       
                     else:
-                      print("Server: Wrong ACK packet: ACK number: {!r}, expected: {!r}".format(
-                                    pkt.ackNum, self.seqNo))
+                      print("Server: Wrong ACK packet: ACK number:")
                   #elif (pkt == "DATA") and (self.state == self.SERVER_TRANSMISSION):
                    #     self.processDataPkt(pkt)
                                     
                   elif (pkt.ACK == True) and (self.state == self.SERVER_TRANSMISSION):
                         self.processAckPkt(pkt)
                   else:
-                    self.logging.info("Server: Wrong packet: seq num " + pkt.seqNum + ", type")
+                    print("Server: Wrong packet: seq num " + pkt.seqNum + ", type")
               else:
-                  self.logging.info("Error in packet, checksum mismatch"+ str(pkt.checkSum))
+                  print("Error in packet, checksum mismatch"+ str(pkt.checkSum))
           else:
-               self.logging.info("Wrong packet class type "+ str(type(pkt)))
+               print("Wrong packet class type "+ str(type(pkt)))
 
         
 class PIMPClientProtocol(StackingProtocol):
@@ -339,10 +338,10 @@ class PIMPClientProtocol(StackingProtocol):
     #function not defined 
   def processDatapkt(self, pkt):
     if self.state == self.CLIENT_CLOSED:
-          self.logging.info("Connection closed")
+          print("Connection closed")
     else:
           if pkt.seqNum == self.client_seqNum:
-              self.logging.info("")
+              print("")
               self.client_seqNum = pkt.seqNum + len(pkt.Data)
               self.sendAck(self.transport)
               self.higherProtocol().data_received(pkt.Data)
@@ -352,15 +351,15 @@ class PIMPClientProtocol(StackingProtocol):
                   self.sendAck(self.transport)
                   self.higherProtocol().data_received(pkt.Data)
           elif pkt.seqNum > self.client_seqNum:
-              self.logging.info()
+              print("")
               self.receiveDataBuffer[pkt.seqNum] = (pkt.time.time())
           else:
-              self.logging.info("")
+              print("")
               ackNum = pkt.seqNum + len(pkt.Data)
               self.sendAck(self.transport)  
   
   def processAckPkt(self, pkt):
-    self.logging.info("")
+    print("")
     latestAckNumber = pkt.ackNum
     
     
@@ -380,14 +379,14 @@ class PIMPClientProtocol(StackingProtocol):
                     if (pkt.SYN == True) and (pkt.ACK == True) and (self.state == self.CLIENT_SYN_SENT):
                             # check ack num
                         if(pkt.ackNum == self.seqNum):
-                          self.logging.info("SYN-ACK with sequence number" + str(pkt.seqNum) + ", ack number" + str(pkt.ackNum))
+                          print("SYN-ACK with sequence number" + str(pkt.seqNum) + ", ack number" + str(pkt.ackNum))
                           self.state = self.CLIENT_TRANSMISSION
                           self.client_seqNum = pkt.seqNum + 1
                           self.sendAck(self.transport)
                           higherTransport = PIMPTransport(self.transport, self)
                           
                         else:
-                          self.logging.info()
+                          print("")
                       
                     elif(pkt.ACK == True) and (self.state == self.CLIENT_TRANSMISSION):
                        self.processAckpkt(pkt)
@@ -395,15 +394,15 @@ class PIMPClientProtocol(StackingProtocol):
                     #elif(pkt. == "DATA") and (self.state == self.CLIENT_TRANSMISSION):
                     #   self.processDatapkt(pkt)  
                     else:
-                      self.logging.info("Client: Wrong packet: seq num " + pkt.seqNum + ", type")
+                      print("Client: Wrong packet: seq num " + pkt.seqNum + ", type")
                 else:
-                  self.logging.info("Error in packet, checksum mismatch"+ str(pkt.checkSum))
+                  print("Error in packet, checksum mismatch"+ str(pkt.checkSum))
             else:
-               self.logging.info("Wrong packet class type "+ str(type(pkt)))
+               print("Wrong packet class type "+ str(type(pkt)))
   
   def connection_lost(self, error):
     self.higherProtocol().connection_lost(error)
-    self.logging.info()
+    print("")
     self.transport = None
 
        
