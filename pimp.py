@@ -20,7 +20,7 @@ class Timer:                                        #Timer to check for timeouts
         await self._callback()
 
 class PIMPPacket(PacketType):                       #Packet Definitions
-    DEFINITION_IDENTIFIER = "PIMP.Packet"
+    DEFINITION_IDENTIFIER = "roastmyprofessor.pimp.PIMPPacket"
     DEFINITION_VERSION = "1.0"
     FIELDS = [
         ("seqNum", UINT32),
@@ -117,6 +117,22 @@ class PIMPPacket(PacketType):                       #Packet Definitions
         return pkt
 
     @classmethod
+    def RtrPacket(cls, seq, ack, data):
+        pkt = cls()
+        pkt.ACK = False
+        pkt.SYN = False
+        pkt.FIN = False
+        pkt.RTR = True
+        pkt.RST = False
+        pkt.seqNum = seq
+        pkt.ackNum = ack
+        pkt.data = b'0'
+        pkt.checkSum = b'0'
+        pkt.updateChecksum()
+        print("!!!!!!!!!!!!!!!!!!!!!!!!SENT RTR PACKET !!!!!!!!!!!!!!!!!!!!!!!!!" + "Seq="+str(pkt.seqNum) + "Ack="+str(pkt.ackNum))
+        return pkt
+
+    @classmethod
     def FinPacket(cls, seq, ack):
         pkt = cls()
         pkt.ACK = False
@@ -147,17 +163,43 @@ class PIMPPacket(PacketType):                       #Packet Definitions
         print("!!!!!!!!!!!!!!!!!!!!!!!!SENT RST PACKET !!!!!!!!!!!!!!!!!!!!!!!!!" + "Seq="+str(pkt.seqNum) + "Ack="+str(pkt.ackNum))
         return pkt
 
-
-
-
 class PIMPTransport(StackingTransport):
 
+    PACKET_BUFF = []
+
+    def pack(length, data): #Method to make packets and return it in a buffer
+        PacketSize = 1500
+        leed = 0
+        end = PacketSize
+        TEMP_BUFF = []
+        while(length > 0):
+            push = data[leed : end]
+            length = length - PacketSize
+            leed = end
+            end = end + PacketSize
+            TEMP_BUFF.append(push)
+        return(TEMP_BUFF)
+        
     def write(self, data):
         pkt = PIMPPacket()
-        pkt.data = data
-        self.lowerTransport().write(pkt.__serialize__())
+        length = len(pkt.data)
+        BUFF = []
+        TxWindow = 4000
+        notempty = True
+    
+        if len(data) <= 1500:  #Where to get the Seq and the Ack Number???
+            pkt.data = data
+            self.lowerTransport().write(pkt.__serialize__())
+                
+        else:
+            BUFF = (pack(length, data))
+            notempty = False
+            pkt.data = data
+            self.lowerTransport().write(pkt.__serialize__())
 
-class PimpServerProtocol(StackingProtocol):
+    #Data Packet stuff
+
+class PIMPServerProtocol(StackingProtocol):
         LISTEN= 100
         SER_SENT_SYNACK= 102
         SER_ESTABLISHED= 103
@@ -232,13 +274,17 @@ class PimpServerProtocol(StackingProtocol):
                     elif (pkt.SYN == False) and (pkt.ACK == True) and (self.Server_state != self.SER_SENT_SYNACK) and (self.Server_state != self.SER_ESTABLISHED):
                         print("DROPPING PACKET 'ACK SENT BEFORE SYNACK'")
 
+                    elif pkt.SYN == False and pkt.ACK == False and self.Server_state == self.SER_ESTABLISHED and pkt.data != 0:
+                        #Process the data Packets Recieved
+                        pass
+
                     else:
                         print("SOMETHING!!!")
 
                 else:
                     print("SOMETHING!!!")
                                                     
-class PimpClientProtocol(StackingProtocol):
+class PIMPClientProtocol(StackingProtocol):
 
         CLI_INITIAL= 200
         CLI_SENT_SYN= 201
@@ -317,11 +363,15 @@ class PimpClientProtocol(StackingProtocol):
                             self.Server_seqNum = pkt.seqNum + 1
                             self.send_rst(self.transport, self.seqNum, self.Server_seqNum)
                             self.Client_state = self.CLI_INITIAL
+
+                    elif pkt.SYN == False and pkt.ACK == False and self.Client_state == self.CLI_ESTABLISHED and pkt.data != 0:
+                        #Process the data packet recieved
+                        pass
                     else:
                         print("SOMETHING!!!")
                 else:
                     print("SOMETHING!!!")
 
 
-PIMPClientFactory = StackingProtocolFactory.CreateFactoryType(lambda: PimpClientProtocol())
-PIMPServerFactory = StackingProtocolFactory.CreateFactoryType(lambda: PimpServerProtocol())
+PIMPClientFactory = StackingProtocolFactory.CreateFactoryType(lambda: PIMPClientProtocol())
+PIMPServerFactory = StackingProtocolFactory.CreateFactoryType(lambda: PIMPServerProtocol())
