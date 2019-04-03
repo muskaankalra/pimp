@@ -6,7 +6,7 @@
 #sys.path.append("/path/to/pimp/")
 
 # use your module's name and client names etc
-#from pimp import PimpClientProtocol, PimpServerProtocol, PIMPPacket
+from pimp import PimpClientProtocol, PimpServerProtocol, PIMPPacket
 
 from playground.network.testing.mock import MockTransportToStorageStream as MockTransport
 from playground.asyncio_lib.testing import TestLoopEx
