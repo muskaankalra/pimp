@@ -6,7 +6,7 @@ import sys
 #sys.path.append("/path/to/pimp/")
 
 # use your module's name and client names etc
-from pimp import PimpClientProtocol, PimpServerProtocol, PIMPPacket
+from pimp import PIMPClientProtocol, PIMPServerProtocol, PIMPPacket
 
 from playground.network.testing.mock import MockTransportToStorageStream as MockTransport
 from playground.asyncio_lib.testing import TestLoopEx
@@ -34,6 +34,9 @@ class PacketStream:
         self.packets = []
         
     def write(self, data):
+    	
+
+
         deserializer = PIMPPacket.Deserializer()
         deserializer.update(data)
         self.packets += list(deserializer.nextPackets())
@@ -42,10 +45,10 @@ class TestLegalCommands(unittest.TestCase):
     def setUp(self):
         self.loop = TestLoopEx()
         asyncio.set_event_loop(self.loop)
-        self.client = PimpClientProtocol()
+        self.client = PIMPClientProtocol()
         self.client.setHigherProtocol(MagicMock())
         self.client_transport = MockTransport(PacketStream())
-        self.server = PimpServerProtocol()
+        self.server = PIMPServerProtocol()
         self.server.setHigherProtocol(MagicMock())
         self.server_transport = MockTransport(PacketStream())
         
