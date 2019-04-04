@@ -8,6 +8,8 @@ from playground.network.packet import PacketType
 from playground.network.packet.fieldtypes import UINT16,UINT32,STRING,BUFFER,BOOL
 
 
+SC_flag = "check"
+
 
 class Timer:                                        #Timer to check for timeouts
     def __init__(self, timeout, callback):
@@ -163,9 +165,77 @@ class PIMPPacket(PacketType):                       #Packet Definitions
         print("!!!!!!!!!!!!!!!!!!!!!!!!SENT RST PACKET !!!!!!!!!!!!!!!!!!!!!!!!!" + "Seq="+str(pkt.seqNum) + "Ack="+str(pkt.ackNum))
         return pkt
 
-class PIMPTransport(StackingTransport):
 
-    PACKET_BUFF = []
+class PIMPProtocol(StackingProtocol):
+    def __init__(self):
+        super().__init__()
+        self.pimppacket = PIMPPacket()
+        self.deserializer = self.pimppacket.Deserializer()
+        self.seqNum = random.getrandbits(32)
+        self.Server_seqNum = 0
+        self.SeqNum = random.getrandbits(32)
+        self.Client_seqNum = 0
+
+    def sendSynAck(self, transport, seq, ack):
+        synackpacket = self.pimppacket.SynAckPacket(seq, ack)   
+        transport.write(synackpacket.__serialize__())
+
+    def send_rst(self, transport, seq, ack):
+        rstpacket = self.pimppacket.RstPacket(seq, ack)
+        transport.write(rstpacket.__serialize__())
+
+    def send_syn(self, transport, seq):
+        synpacket = self.pimppacket.SynPacket(seq)
+        transport.write(synpacket.__serialize__())
+
+    def send_Ack(self, transport, seq, ack):
+        ackpacket = self.pimppacket.AckPacket(seq, ack)
+        transport.write(ackpacket.__serialize__())
+
+    def send_rst(self, transport, seq, ack):
+        rstpacket = self.pimppacket.RstPacket(seq, ack)
+        transport.write(rstpacket.__serialize__())
+
+
+    def server_send_data(self, transport, data):
+        datapacket = self.pimppacket.DataPacket(self.SeqNum, self.Client_seqNum, data)
+        transport.write(datapacket.__serialize__())
+
+
+    def client_send_data(self, transport, data):
+        datapacket = self.pimppacket.DataPacket(self.seqNum, self.Server_seqNum, data)
+        transport.write(datapacket.__serialize__())
+            #self.lowerTransport().write(datapacket.__serialize__())
+            
+    def check_timeout(self):
+        if self.resend_flag == True and self.Server_state == self.SER_SENT_SYNACK:
+            self.sendSynAck(self.transport, self.SeqNum -1, self.Client_seqNum)
+            self.resend_flag = False
+        elif self.resend_flag == True and self.SER_ESTABLISHED:
+            self.resend_flag = False
+                #retransmission
+            pass
+        else:
+            pass
+
+class PIMPTransport(StackingTransport):
+    def __init__(self, transport, Protocol):
+        super().__init__(transport)
+        self.PACKET_BUFF = []
+        self.transport = transport
+        self.protocol = Protocol
+        
+    def send_packet(self, pkt):
+        if length <= 1500:  #Where to get the Seq and the Ack Number???
+            BUFF = data
+            self.lowerTransport().write(pkt.__serialize__())
+            print(BUFF)
+                
+        else:
+            BUFF = (pack(length, data))
+            #pkt.data = data
+            self.lowerTransport().write(pkt.__serialize__())
+            print(BUFF)
 
     def pack(length, data): #Method to make packets and return it in a buffer
         PacketSize = 1500
@@ -181,25 +251,23 @@ class PIMPTransport(StackingTransport):
         return(TEMP_BUFF)
         
     def write(self, data):
-        pkt = PIMPPacket()
-        length = len(pkt.data)
+        #print("!@#$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$%")
+        #pkt = PIMPPacket()
+        length = len(data)
         BUFF = []
         TxWindow = 4000
-        notempty = True
-    
-        if len(data) <= 1500:  #Where to get the Seq and the Ack Number???
-            pkt.data = data
-            self.lowerTransport().write(pkt.__serialize__())
-                
-        else:
-            BUFF = (pack(length, data))
-            notempty = False
-            pkt.data = data
-            self.lowerTransport().write(pkt.__serialize__())
+        global SC_flag
+        
+        if SC_flag == "Server":
+            #print("!@##@#@$#$@#%@#%@#%@#")
+            self.protocol.server_send_data(self.transport, data)
 
-    #Data Packet stuff
+        elif SC_flag == "Client":
+            #print("#@$@#%#$@^#$^&#$&^#$")
+            self.protocol.client_send_data(self.transport, data)
 
-class PIMPServerProtocol(StackingProtocol):
+
+class PIMPServerProtocol(PIMPProtocol):
         LISTEN= 100
         SER_SENT_SYNACK= 102
         SER_ESTABLISHED= 103
@@ -207,11 +275,9 @@ class PIMPServerProtocol(StackingProtocol):
         def __init__(self):
             print("!!!!!!!!!!IN SERVER!!!!!!!!!!!")
             super().__init__()
-            
-            self.PIMPServer1 = PIMPPacket()
-            self.deserializer = self.PIMPServer1.Deserializer()
-            self.seqNum = random.getrandbits(32)
-            self.Client_seqNum = 0
+            global SC_flag
+            SC_flag = "Server"
+
             self.Server_state = self.LISTEN
             self.resend_flag = True
             
@@ -230,25 +296,6 @@ class PIMPServerProtocol(StackingProtocol):
         
         def connection_made(self, transport):
             self.transport = transport
-
-        def sendSynAck(self, transport, seq, ack):
-            synackpacket = self.PIMPServer1.SynAckPacket(seq, ack)   
-            transport.write(synackpacket.__serialize__())
-
-        def send_rst(self, transport, seq, ack):
-            rstpacket = self.PIMPPacket1.RstPacket(self.seq, self.ack)
-            transport.write(rstpacket.__serialize__())
-            
-        def check_timeout(self):
-            if self.resend_flag == True and self.Server_state == self.SER_SENT_SYNACK:
-                self.sendSynAck(self.transport, self.seqNum -1, self.Client_seqNum)
-                self.resend_flag = False
-            elif self.resend_flag == True and self.SER_ESTABLISHED:
-                self.resend_flag = False
-                #retransmission
-                pass
-            else:
-                pass
             
         def data_received(self, data):
             #print(data)
@@ -258,25 +305,32 @@ class PIMPServerProtocol(StackingProtocol):
                     if pkt.SYN == True and pkt.ACK == False and self.Server_state == self.LISTEN:
                         print("!!!!!!!!!!!!Packet Received with Syn Number!!!!!!" + str(pkt.seqNum))
                         self.Client_seqNum = pkt.seqNum + 1
-                        self.sendSynAck(self.transport, self.seqNum, self.Client_seqNum)
+                        self.sendSynAck(self.transport, self.SeqNum, self.Client_seqNum)
                         self.resend_flag = True
                         timer = Timer(3, self.check_timeout)
-                        self.seqNum += 1
+                        self.SeqNum += 1
                         self.Server_state = self.SER_SENT_SYNACK
 
                     elif pkt.SYN == False and pkt.ACK == True and self.Server_state == self.SER_SENT_SYNACK:
-                        if self.seqNum == pkt.ackNum and self.Client_seqNum == pkt.seqNum:
+                        if self.SeqNum == pkt.ackNum and self.Client_seqNum == pkt.seqNum:
                             print("!!!!!!!!!!!!!!!!Ack Packet Received !!!!!!!!!!!!!!!!!!!!!")
                             self.resend_flag = False
                             self.Server_state = self.SER_ESTABLISHED
+                            ################################################################################3
+                            pimp_transport = PIMPTransport(self.transport,self)
+                            self.higherProtocol().connection_made(pimp_transport)
                             print("!!!!!!!!!!!Connection Established!!!!!!!!!!!!!!!!!!!")
+
 
                     elif (pkt.SYN == False) and (pkt.ACK == True) and (self.Server_state != self.SER_SENT_SYNACK) and (self.Server_state != self.SER_ESTABLISHED):
                         print("DROPPING PACKET 'ACK SENT BEFORE SYNACK'")
 
                     elif pkt.SYN == False and pkt.ACK == False and self.Server_state == self.SER_ESTABLISHED and pkt.data != 0:
-                        #Process the data Packets Recieved
-                        pass
+                        print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!Received DATA!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1")
+                        print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@" +str(pkt.data)+"@@@@@@@@@@@@@@@@@@@@@@2222"+ str(len(pkt.data)))
+                        self.SeqNum = pkt.ackNum 
+                        self.Client_seqNum = pkt.seqNum + len(pkt.data)
+                        self.higherProtocol().data_received(pkt.data)
 
                     else:
                         print("SOMETHING!!!")
@@ -284,7 +338,7 @@ class PIMPServerProtocol(StackingProtocol):
                 else:
                     print("SOMETHING!!!")
                                                     
-class PIMPClientProtocol(StackingProtocol):
+class PIMPClientProtocol(PIMPProtocol):
 
         CLI_INITIAL= 200
         CLI_SENT_SYN= 201
@@ -292,12 +346,11 @@ class PIMPClientProtocol(StackingProtocol):
         
         def __init__(self):
             super().__init__()
-            self.PIMPPacket1 = PIMPPacket()
-            self.deserializer = self.PIMPPacket1.Deserializer()
-            self.seqNum = random.getrandbits(32)
-            self.Server_seqNum = 0
             self.Client_state = self.CLI_INITIAL
             self.resend_flag = True
+            print("!!!!!!!!!!!!!!!!!!!!!!!!!!!INside CLIENT!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+            global SC_flag
+            SC_flag = "Client"
             
            
         def logging_initialize(self):
@@ -323,17 +376,6 @@ class PIMPClientProtocol(StackingProtocol):
                 self.seqNum += 1
                 self.Client_state = self.CLI_SENT_SYN
 
-        def send_syn(self, transport, seq):
-            synpacket = self.PIMPPacket1.SynPacket(seq)
-            transport.write(synpacket.__serialize__())
-
-        def send_Ack(self, transport, seq, ack):
-            ackpacket = self.PIMPPacket1.AckPacket(seq, ack)
-            transport.write(ackpacket.__serialize__())
-
-        def send_rst(self, transport, seq, ack):
-            rstpacket = self.PIMPPacket1.RstPacket(self.seq, self.ack)
-            transport.write(rstpacket.__serialize__())
 
         def check_timeout(self):
             if self.resend_flag == True and self.Client_state == self.CLI_SENT_SYN:
@@ -343,7 +385,7 @@ class PIMPClientProtocol(StackingProtocol):
                 self.send_Ack(self.transport, self.seqNum, self.Server_seqNum - 1)
                 self.resend_flag = False
             else:
-                print("TIMEOUT HAS OCCURED")
+                pass
         
         def data_received(self, data):
             #print(data)
@@ -354,10 +396,18 @@ class PIMPClientProtocol(StackingProtocol):
                         if self.seqNum == pkt.ackNum:
                             print("!!!!!!!!!!!!SYNACK Packet Received with Syn Num" + str(pkt.seqNum) + "Ack Num" + str(pkt.ackNum))
                             self.Server_seqNum = pkt.seqNum + 1
+                            self.seqNum = pkt.ackNum
                             self.resend_flag = False
                             self.send_Ack(self.transport, self.seqNum, self.Server_seqNum)
                             self.Client_state = self.CLI_ESTABLISHED
+                            #################################################################################
+                            pimp_transport = PIMPTransport(self.transport,self)
+                            self.higherProtocol().connection_made(pimp_transport)
+                            #BUF = PIMPTransport.write(pkt.data)
+                            #print(BUF)
+                            #self.send_data(self.transport, self.seqNum, self.Server_seqNum, BUF)
                             print("!!!!!!!!!!!Connection Established!!!!!!!!!!!!!!!!!!!")
+
                         elif self.seqNum != pkt.ackNum:
                             print("!!!!!!!!!SENDING RST PACKET!!!!!!!!")
                             self.Server_seqNum = pkt.seqNum + 1
@@ -365,8 +415,12 @@ class PIMPClientProtocol(StackingProtocol):
                             self.Client_state = self.CLI_INITIAL
 
                     elif pkt.SYN == False and pkt.ACK == False and self.Client_state == self.CLI_ESTABLISHED and pkt.data != 0:
+                        print("!!!!!!!!!!!!!!!!!DATA PACKET RECIEVED!!!!!!!!!!!!!!!!!!!!")
+                        self.seqNum = pkt.ackNum 
+                        self.Server_seqNum = pkt.seqNum + len(pkt.data)
+                        self.higherProtocol().data_received(pkt.data)
                         #Process the data packet recieved
-                        pass
+
                     else:
                         print("SOMETHING!!!")
                 else:
