@@ -6,12 +6,14 @@ class GoldenNugget():
   def input(self,string):
     	if self.status == 0:
         if string >= "1" and string <= "6":
-        	self.choose_game(string)
+          #self.choose_game(string)
+          self.response = "selected:"+ string
         else:
           self.response = "Improper input."
       elif self.status == 1:
-        	ClientPowerBall.input(string)
-          self.response = ClientPowerBall.response
+          self.response = "powerball!!"
+        	#ClientPowerBall.input(string)
+          #self.response = ClientPowerBall.response
     	else:
         	self.responese = "Error!!!"
         
