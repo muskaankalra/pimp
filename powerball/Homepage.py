@@ -5,7 +5,6 @@ class GoldenNugget():
   def input(self,string):
     	if self.status == 0:
         if string >= "1" and string <= "6":
-          #self.choose_game(string)
           self.response = "selected:"+ string
         else:
           self.response = "Improper input."
