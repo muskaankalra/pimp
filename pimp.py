@@ -324,6 +324,7 @@ class PIMPServerProtocol(PIMPProtocol):
 
                     elif (pkt.SYN == False) and (pkt.ACK == True) and (self.Server_state != self.SER_SENT_SYNACK) and (self.Server_state != self.SER_ESTABLISHED):
                         #print("DROPPING PACKET 'ACK SENT BEFORE SYNACK'")
+                        pass
 
                     elif pkt.SYN == False and pkt.ACK == False and self.Server_state == self.SER_ESTABLISHED and pkt.data != 0:
                         #print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!Received DATA!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1")
