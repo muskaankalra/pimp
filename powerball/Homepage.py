@@ -3,16 +3,16 @@ class GoldenNugget():
     	status = 0 # the game's initial status is 0, 0 means the game is still on the homepage
   
   def input(self,string):
-    	if self.status == 0:
+    if self.status == 0:
           if string == "1":
             self.response = "selected:"+ string
           else:
             self.response = "Improper input."
-      elif self.status == 1:
+    elif self.status == 1:
           self.response = "powerball!!"
         	#ClientPowerBall.input(string)
           #self.response = ClientPowerBall.response
-    	else:
+    else:
         	self.responese = "Error!!!"
         
   
