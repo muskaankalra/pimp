@@ -319,7 +319,7 @@ class PIMPServerProtocol(PIMPProtocol):
                             ################################################################################3
                             pimp_transport = PIMPTransport(self.transport,self)
                             self.higherProtocol().connection_made(pimp_transport)
-                            print("!!!!!!!!!!!Connection Established!!!!!!!!!!!!!!!!!!!")
+                            #print("!!!!!!!!!!!Connection Established!!!!!!!!!!!!!!!!!!!")
 
 
                     elif (pkt.SYN == False) and (pkt.ACK == True) and (self.Server_state != self.SER_SENT_SYNACK) and (self.Server_state != self.SER_ESTABLISHED):
