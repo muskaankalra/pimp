@@ -17,8 +17,8 @@ class GoldenNugget():
         
   
   def welcome_narratives(self):
-    	output = ""
-  		output += """
+      output = ""
+      output += """
       Welcome to the Golden Nugget Casino!
   		WHERE FRIENDSHIP IS THE LARGEST JACKPOT!
       
