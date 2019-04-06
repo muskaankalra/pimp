@@ -4,10 +4,10 @@ class GoldenNugget():
   
   def input(self,string):
     	if self.status == 0:
-        if string == "1":
-          self.response = "selected:"+ string
-        else:
-          self.response = "Improper input."
+          if string == "1":
+            self.response = "selected:"+ string
+          else:
+            self.response = "Improper input."
       elif self.status == 1:
           self.response = "powerball!!"
         	#ClientPowerBall.input(string)
