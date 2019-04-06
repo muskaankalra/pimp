@@ -1,7 +1,10 @@
+import random
 import asyncio
 import sys
 import playground
-class EscapeClientProtocol(asyncio.Protocol):
+
+
+class HomepageClientProtocol(asyncio.Protocol):
     def __init__(self, message, loop):
         self.message = message
         self.loop = loop
@@ -11,14 +14,10 @@ class EscapeClientProtocol(asyncio.Protocol):
         self.transport = transport
 
     def data_received(self, data):
-        if "escaped" not in data.decode() and "dead" not in data.decode():
-            print(data.decode())
-            command = stdinAlert()
-            self.transport.write(command.encode())
-        else:
-            print(data.decode())
-            self.transport.close()
-
+        print(data.decode())
+        command = stdinAlert()
+        self.transport.write(command.encode())
+        
     def connection_lost(self, exc):
         print('The server closed the connection')
         print('Stop the event loop')
@@ -35,6 +34,6 @@ loop.add_reader(sys.stdin, stdinAlert)
 message = stdinAlert()
 
 coro = playground.create_connection(lambda: EscapeClientProtocol(message, loop),
-                              '20191.10.20.30', 62261)
+                              '20191.10.20.30', 6261)
 loop.run_until_complete(coro)
 loop.run_forever()
