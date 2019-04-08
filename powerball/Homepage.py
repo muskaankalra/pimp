@@ -21,9 +21,9 @@ class Homepage():
         
   
   def welcome_narratives(self):
-    response = "Welcome to the Golden Nugget Casino!\n" + "WHERE FRIENDSHIP IS THE LARGEST JACKPOT!\n\n"
+    response = "Welcome to the Golden Nugget Casino!\n" 
+    response = response +"WHERE FRIENDSHIP IS THE LARGEST JACKPOT!\n\n"
     """
-    respone + = "WHERE FRIENDSHIP IS THE LARGEST JACKPOT!\n\n"
     response += "May we all be winners -> complete assignemnts, pass this course, get straight As, and an internship & job.\n"
     response += "Speaking of internships and jobs, we have an expert team here at Golden Nugget to assist with your career needs:\n"
     response += "-10 Bitpoints for resume review or cover letter review\n"
