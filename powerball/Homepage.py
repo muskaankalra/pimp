@@ -21,28 +21,8 @@ class Homepage():
         
   
   def welcome_narratives(self):
-      output = ""
-      output += """
-      Welcome to the Golden Nugget Casino!
-  		WHERE FRIENDSHIP IS THE LARGEST JACKPOT!
+      output = "Welcome to the Golden Nugget Casino!"
       
-      May we all be winners -> complete assignemnts, pass this course, get straight As, and an internship & job.
-      
-      Speaking of internships and jobs, we have an expert team here at Golden Nugget to assist with your career needs: 
-      		-10 Bitpoints for resume review or cover letter review
-          -100 bitpoints for writing your cover letter
-          -250 bitpoints for internship/job referral
-          
-  		Casino Services Menu:
-      		1. Powerball
-          2. Roulette
-          3. Deal or No Deal
-          4. Career Assisstance # direct transfer with memo
-          5. About Us
-          6. Career with Golden Nugget Casino
-          
-  		Note: You can choose the menu by enter a single digit that is corresponding to the menu."
-      """
       return output 
       
   def choose_game(self, userInput):
