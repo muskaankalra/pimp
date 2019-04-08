@@ -16,7 +16,9 @@ class HomepageServerProtocol(asyncio.Protocol):
         
     def data_received(self, data):
         string = data.decode()
+        print(string)
         string = string[:-1]
+        print(" change to" + string)
         output = self.homepage.input(string)
         self.transport.write(output.encode())
 
