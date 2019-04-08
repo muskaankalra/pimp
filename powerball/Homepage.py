@@ -8,7 +8,7 @@ class Homepage():
     #if self.status === 0, choose Service
     if self.status == 0:
       if string >="1" and string <= "6":
-        self.choose_game(sring)
+        self.response = self.choose_game(sring)
       else:
         self.response = "Improper input."
     elif self.status == 1:
@@ -21,9 +21,17 @@ class Homepage():
         
   
   def welcome_narratives(self):
-      output = "Welcome to the Golden Nugget Casino!"
+    response = "Welcome to the Golden Nugget Casino!"
+    respone += "WHERE FRIENDSHIP IS THE LARGEST JACKPOT!\n\n"
+    response += "May we all be winners -> complete assignemnts, pass this course, get straight As, and an internship & job.\n"
+    response += "Speaking of internships and jobs, we have an expert team here at Golden Nugget to assist with your career needs:\n"
+    response += "-10 Bitpoints for resume review or cover letter review\n"
+    response += "-100 bitpoints for writing your cover letter\n"
+    response += "-250 bitpoints for internship/job referral\n\n"
+    response += "Casino Services Menu:\n"
+    response += "1. Powerball\n"
+    return response
       
-      return output 
       
   def choose_game(self, userInput):
     output = ""
