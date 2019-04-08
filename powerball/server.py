@@ -12,16 +12,20 @@ class HomepageServerProtocol(asyncio.Protocol):
 
         self.homepage = Homepage()
         
-        self.transport.write(self.homepage.welcome_narratives().encode())
+        #self.transport.write(self.homepage.welcome_narratives().encode())
         
     def data_received(self, data):
-        string = data.decode()
-        print(string)
-        string = string[:-1]
-        print(" change to" + string)
-        output = self.homepage.input(string)
-        print("change :" +output)
-        self.transport.write(output.encode())
+        if(self.homepage.getSign == False):
+            self.transport.write(self.homepage.welcome_narratives().encode())
+            self.homepage.setSign()
+        else:
+            string = data.decode()
+            print(string)
+            string = string[:-1]
+            print(" change to" + string)
+            output = self.homepage.input(string)
+            print("change :" + output)
+            self.transport.write(output.encode())
 
 
 loop = asyncio.get_event_loop()
