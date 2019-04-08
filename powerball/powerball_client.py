@@ -15,8 +15,8 @@ class HomepageClientProtocol(asyncio.Protocol):
 
     def data_received(self, data):
         print(data.decode())
-        command = stdinAlert()
-        self.transport.write(command.encode())
+        input = stdinAlert()
+        self.transport.write(input.encode())
         
     def connection_lost(self, exc):
         print('The server closed the connection')
