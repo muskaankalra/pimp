@@ -31,7 +31,7 @@ loop = asyncio.get_event_loop()
 
 loop.add_reader(sys.stdin, stdinAlert)
 
-message = ""
+message = stdinAlert()
 
 coro = playground.create_connection(lambda: HomepageClientProtocol(message, loop),
                               '20191.10.20.30', 6261)
