@@ -6,6 +6,7 @@ import playground
 
 class HomepageClientProtocol(asyncio.Protocol):
     def __init__(self, loop):
+        self.message = message
         self.loop = loop
 
     def connection_made(self, transport):
@@ -32,7 +33,7 @@ loop.add_reader(sys.stdin, stdinAlert)
 
 #message = stdinAlert()
 
-coro = playground.create_connection(lambda: HomepageClientProtocol(loop),
+coro = playground.create_connection(HomepageClientProtocol,
                               '20191.10.20.30', 6261)
 loop.run_until_complete(coro)
 loop.run_forever()
