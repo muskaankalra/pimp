@@ -51,19 +51,16 @@ class Homepage():
         self.status = 1
         self.powerball = Powerball()
         output = self.powerball.start()
-    """
     elif userInput == "2":
-
-        #call roulette
+        self.status = 2
     elif userInput == "3":
-        #call deal or no deal 
+        self.status = 3
     elif userInput == "4":
-        # career services
+        self.status = 4
     elif userInput == "5":
-      #call about us    
+        self.status = 5
     elif userInput == "6":
-      #call careers
-    """
+        self.status = 6
     else:
-      output  = "Please enter a single digit of your choice."
+        output  = "Please enter a single digit of your choice."
     return output
