@@ -2,7 +2,7 @@ from powerball import PowerBall
 
 class Homepage():
   def __init__(self):
-    	status = 0 # the game's initial status is 0, 0 means the game is still on the homepage
+    	self.status = 0 # the game's initial status is 0, 0 means the game is still on the homepage
   
   def input(self,string):
     #if self.status === 0, choose Service
