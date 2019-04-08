@@ -17,9 +17,8 @@ class PowerBall:
 		return string
 
 	def start(self):
-		response = "WELCOME TO POWERBALL!!"
+		response = "WELCOME TO POWERBALL!!\n"
 		return response
-
 
 
 	def CalPrize(self, num):
