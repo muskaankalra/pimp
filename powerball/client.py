@@ -5,8 +5,7 @@ import playground
 
 
 class HomepageClientProtocol(asyncio.Protocol):
-    def __init__(self, message, loop):
-        self.message = message
+    def __init__(self, loop):
         self.loop = loop
 
     def connection_made(self, transport):
