@@ -7,15 +7,15 @@ class Homepage():
   def input(self,string):
     #if self.status === 0, choose Service
     if self.status == 0:
-          if string >="1" and string <= "6":
-            self.choose_game(sring)
-          else:
-            self.response = "Improper input."
+      if string >="1" and string <= "6":
+        self.choose_game(sring)
+      else:
+        self.response = "Improper input."
     elif self.status == 1:
-        	self.responese = self.powerball.input(string)
+      self.responese = self.powerball.input(string)
           #self.response = ClientPowerBall.response
     else:
-        	self.responese = "Error!!!"
+      self.responese = "Error!!!"
 
     return self.response
         
