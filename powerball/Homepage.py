@@ -10,7 +10,7 @@ class Homepage():
     if self.status == 0:
       if string >="1" and string <= "6":
         print(string)
-        self.response = self.choose_game(sring)
+        self.response = self.choose_game(string)
         print(self.response)
       else:
         self.response = "Improper input."
