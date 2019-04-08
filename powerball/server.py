@@ -20,6 +20,7 @@ class HomepageServerProtocol(asyncio.Protocol):
         string = string[:-1]
         print(" change to" + string)
         output = self.homepage.input(string)
+        print("change :" +output)
         self.transport.write(output.encode())
 
 
