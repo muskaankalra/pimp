@@ -12,7 +12,7 @@ class HomepageServerProtocol(asyncio.Protocol):
 
         self.homepage = Homepage()
         
-        self.transport.write(self.homepage.welcome_narratives())
+        self.transport.write(self.homepage.welcome_narratives().encode())
         
     def data_received(self, data):
         string = data.decode()
