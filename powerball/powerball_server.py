@@ -1,6 +1,6 @@
 import asyncio
 import playground
-from Homepage import GoldenNugget 
+from Homepage import Homepage 
 
 class HomepageServerProtocol(asyncio.Protocol):
 
@@ -10,7 +10,7 @@ class HomepageServerProtocol(asyncio.Protocol):
 
         self.transport = transport
 
-        self.homepage = GoldenNugget()
+        self.homepage = Homepage()
         
         self.transport.write(self.homepage.welcome_narratives())
         
