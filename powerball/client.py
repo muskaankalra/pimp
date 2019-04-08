@@ -10,7 +10,7 @@ class HomepageClientProtocol(asyncio.Protocol):
         self.loop = loop
 
     def connection_made(self, transport):
-        transport.write(self.message.encode())
+        #transport.write(self.message.encode())
         self.transport = transport
 
     def data_received(self, data):
@@ -31,9 +31,9 @@ loop = asyncio.get_event_loop()
 
 loop.add_reader(sys.stdin, stdinAlert)
 
-message = stdinAlert()
+#message = stdinAlert()
 
-coro = playground.create_connection(lambda: HomepageClientProtocol(message, loop),
+coro = playground.create_connection(lambda: HomepageClientProtocol(loop),
                               '20191.10.20.30', 6261)
 loop.run_until_complete(coro)
 loop.run_forever()
