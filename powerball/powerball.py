@@ -72,14 +72,17 @@ class PowerBall:
 
 		elif self.status == 3:
 
-			print("choice:"+choice)
+	
 			arr = choice.split(",")
 			arr = [int(i) for i in arr]
-			prize = game.CalPrize(arr)
+			prize = self.CalPrize(arr)
 			if prize != "":
 				response = "\nCongrats! You won {} BITPOINTS".format(prize)
 			else:
 				response = "\nSorry!, You didnt win anything"
+				
+			response = response + self.options()
+			self.status = 0
 		else:
 			response = "Error status!!!"
 
@@ -93,7 +96,7 @@ class PowerBall:
 		return response
 
 	def options(self):
-		response =  "\nSelect from the following options:\n1. Pick your numbers\n2. Game Rules\n3. Claim your prize!\n4. Return to Homepage\n"
+		response =  "\n\nSelect from the following options:\n1. Pick your numbers\n2. Game Rules\n3. Claim your prize!\n4. Return to Homepage\n"
 		return response
 
 
