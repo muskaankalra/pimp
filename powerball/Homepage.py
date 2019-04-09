@@ -16,7 +16,6 @@ class Homepage():
     #if self.status === 0, choose Service
     if self.status == 0:
       if string >="1" and string <= "6":
-        print(string)
         self.response = self.choose_game(string)
         print(self.response)
       else:
@@ -54,10 +53,9 @@ class Homepage():
   def choose_game(self, userInput):
     output = ""
     if userInput == "1":
-        print("wang")
         self.status = 1
-        self.powerball = PowerBall()
-        print("wangben")
+        lottery = [12, 24 ,35, 55, 22]
+        self.powerball = PowerBall(1000, lottery)
         output = self.powerball.start()
     elif userInput == "2":
         self.status = 2
