@@ -20,10 +20,12 @@ class PowerBall:
 		#string = "\nSelect from the following options:\n1. Pick your numbers\n2. Game Rules\n3. Claim your prize!\n4. Return to Homepage\n"
 		response = ""
 		print("benbenfangfang")
+		print(choice)
 		if self.status == 0:
 			if choice == "1":
 				self.status = 1
 				response = "Number of tickets you want to buy: "
+				print("benbenfan")
 	
 				
 			elif choice == "2":
@@ -63,7 +65,6 @@ class PowerBall:
 				response = "\nCongrats! You won {} BITPOINTS".format(prize)
 			else:
 				response = "\nSorry!, You didnt win anything"
-
 
 		return response
 
