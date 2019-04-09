@@ -60,7 +60,7 @@ class PowerBall:
 				tickets = [int(i) for i in tickets]
 				response = "Your tickets are: {}".format(tickets)
 			elif (choice == "No") or (choice == "N") or (choice == "no") or (choice == "n"):
-				tickets = game.GenerateRandom(num)
+				tickets = game.GenerateRandom(self.num)
 				response = "Your tickets are: {}".format(tickets)
 			else:
 				response = "Improper input."
