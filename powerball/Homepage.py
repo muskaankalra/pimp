@@ -23,10 +23,10 @@ class Homepage():
         print(self.response)
     elif self.status == 1:
       print("benbenben")
-      self.responese = self.powerball.input(string)
+      self.response = self.powerball.input(string)
           #self.response = ClientPowerBall.response
     else:
-      self.responese = "Error!!!"
+      self.response = "Error!!!"
 
     return self.response
         
