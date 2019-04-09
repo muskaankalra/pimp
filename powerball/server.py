@@ -20,9 +20,7 @@ class HomepageServerProtocol(asyncio.Protocol):
             self.homepage.setSign()
         else:
             string = data.decode()
-            print(string)
             string = string[:-1]
-            print(" change to" + string)
             output = self.homepage.input(string)
             print("change :" + output)
             self.transport.write(output.encode())
