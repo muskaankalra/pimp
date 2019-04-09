@@ -59,9 +59,12 @@ class PowerBall:
 				tickets = choice.split(",")
 				tickets = [int(i) for i in tickets]
 				response = "Your tickets are: {}".format(tickets)
+				response = response + self.options()
+				
 			elif (choice == "No") or (choice == "N") or (choice == "no") or (choice == "n"):
 				tickets = self.GenerateRandom(self.num)
 				response = "Your tickets are: {}".format(tickets)
+				response = response + self.options()
 			else:
 				response = "Improper input."
 
@@ -85,6 +88,10 @@ class PowerBall:
 	def start(self):
 		self.quit = False
 		response = "WELCOME TO POWERBALL!!\n" + "\nSelect from the following options:\n1. Pick your numbers\n2. Game Rules\n3. Claim your prize!\n4. Return to Homepage\n"
+		return response
+
+	def options(self):
+		response =  "\nSelect from the following options:\n1. Pick your numbers\n2. Game Rules\n3. Claim your prize!\n4. Return to Homepage\n"
 		return response
 
 
