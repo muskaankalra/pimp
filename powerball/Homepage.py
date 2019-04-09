@@ -54,8 +54,9 @@ class Homepage():
   def choose_game(self, userInput):
     output = ""
     if userInput == "1":
+        print("wang")
         self.status = 1
-        self.powerball = Powerball()
+        self.powerball = PowerBall()
         print("wangben")
         output = self.powerball.start()
     elif userInput == "2":
