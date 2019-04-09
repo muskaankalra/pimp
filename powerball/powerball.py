@@ -5,6 +5,8 @@ class PowerBall:
 		self.id = ""
 		self.pool = pool
 		self.lottery = lottery
+		self.quit = False
+		self.status = 0  # 0 means just enter into the homepage 
 
 	def GenerateRandom(self, num):
 		randlist = []
@@ -13,11 +15,60 @@ class PowerBall:
 		print(randlist)
 		return randlist
 
-	def input(self,string):
-		return string
+	def input(self,choice):
+
+		string = "\nSelect from the following options:\n1. Pick your numbers\n2. Game Rules\n3. Claim your prize!\n4. Return to Homepage\n"
+		if self.status == 0:
+			if choice == "1":
+				self.status = 1
+				response = "Number of tickets you want to buy: "
+				return response
+				
+			elif choice == "2":
+				self.status = 2
+				response = "EACH GAME IS WORTH 10 BITPOINTS\n1. Select five numbers from 1 to 69 or you can also choose a 'Randomly Generated Ticket' that gives you 5 randonly generated numbers\n2. Every Monday and Thursday the PowerBall rolls and 5 random winning numbers are displayed on our home page\n3. If 3 or more of your ticket numbers match with the winning numbers on the PowerBall, you win according to the Prizes listed\n4. To claim your prize, go to our home page and choose the 'Claim Prize' option"
+				return response
+				
+			elif choice == "3":
+				self.status = 3
+				response = "Enter your numbers seperated by a comma: "
+				return response
+
+			elif choice == "4":
+				quit = True
+			else:
+				response = "Improper input."
+		elif self.status == 1:
+			response = "Do you want to choose your numbers? (Y)es or (N)o: "
+			return response
+
+			"""
+			if (s == "Yes") or (s == "Y") or (s == "yes") or (s == "y"): 
+				lottery = input("Enter your numbers seperated by a comma: ")
+				tickets = lottery.split(",")
+				tickets = [int(i) for i in tickets]
+
+			else:
+				tickets = game.GenerateRandom(num)
+
+			response = "Your tickets are: {}".format(tickets)
+			"""
+		elif self.status == 3:
+			num = int(choice)
+			arr = num.split(",")
+			arr = [int(i) for i in arr]
+			prize = game.CalPrize(arr)
+			if prize != "":
+				response = "\nCongrats! You won {} BITPOINTS".format(prize)
+			else:
+				response = "\nSorry!, You didnt win anything"
+
+
+		return response
 
 	def start(self):
-		response = "WELCOME TO POWERBALL!!\n"
+		self.quit = False
+		response = "WELCOME TO POWERBALL!!\n" + "\nSelect from the following options:\n1. Pick your numbers\n2. Game Rules\n3. Claim your prize!\n4. Return to Homepage\n"
 		return response
 
 
