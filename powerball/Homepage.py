@@ -22,6 +22,7 @@ class Homepage():
         self.response = "Improper input."
         print(self.response)
     elif self.status == 1:
+      print("benbenben")
       self.responese = self.powerball.input(string)
           #self.response = ClientPowerBall.response
     else:
