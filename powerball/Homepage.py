@@ -24,6 +24,11 @@ class Homepage():
     elif self.status == 1:
       print("benbenben")
       self.response = self.powerball.input(string)
+
+      if self.powerball.getquit() == True:
+        self.status = 0
+        self.response = homepage()
+
           #self.response = ClientPowerBall.response
     else:
       self.response = "Error!!!"
@@ -49,7 +54,16 @@ class Homepage():
     response = response + "Note: You can choose the menu by enter a single digit that is corresponding to the menu."
 
     return response
-      
+  
+  def homepage(self):
+    response = "1. Powerball\n"
+    response = response + "2. Roulette\n"
+    response = response + "3. Deal or No Deal\n"
+    response = response + "4. Career Assisstance # direct transfer with memo\n"
+    response = response + "5. About Us\n"
+    response = response + "6. Career with Golden Nugget Casino\n\n"
+    response = response + "Note: You can choose the menu by enter a single digit that is corresponding to the menu."
+    return response
       
   def choose_game(self, userInput):
     output = ""
