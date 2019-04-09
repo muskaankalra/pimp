@@ -56,6 +56,7 @@ class Homepage():
     if userInput == "1":
         self.status = 1
         self.powerball = Powerball()
+        print("wangben")
         output = self.powerball.start()
     elif userInput == "2":
         self.status = 2
