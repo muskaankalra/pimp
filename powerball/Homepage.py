@@ -25,10 +25,13 @@ class Homepage():
       print("benbenben")
       self.response = self.powerball.input(string)
 
+      print(self.powerball.getquit())
+
       if self.powerball.getquit() == True:
         self.status = 0
+        print("wnag")
         self.response = homepage()
-
+ 
           #self.response = ClientPowerBall.response
     else:
       self.response = "Error!!!"
