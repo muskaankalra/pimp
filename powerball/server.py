@@ -15,14 +15,13 @@ class HomepageServerProtocol(asyncio.Protocol):
         #self.transport.write(self.homepage.welcome_narratives().encode())
         
     def data_received(self, data):
-        if(self.homepage.getSign() == False):
+        if self.homepage.getSign() == False :
             self.transport.write(self.homepage.welcome_narratives().encode())
             self.homepage.setSign()
         else:
             string = data.decode()
             string = string[:-1]
             output = self.homepage.input(string)
-            print("change :" + output)
             self.transport.write(output.encode())
 
 
