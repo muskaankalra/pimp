@@ -17,12 +17,9 @@ class Homepage():
     if self.status == 0:
       if string >="1" and string <= "6":
         self.response = self.choose_game(string)
-        print(self.response)
       else:
         self.response = "Improper input."
-        print(self.response)
     elif self.status == 1:
-      print("benbenben")
       self.response = self.powerball.input(string)
 
 
