@@ -66,6 +66,8 @@ class PowerBall:
 			else:
 				response = "\nSorry!, You didnt win anything"
 
+
+		print("ben:\n"+response)
 		return response
 
 	def start(self):
