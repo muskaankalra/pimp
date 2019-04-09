@@ -17,7 +17,7 @@ class PowerBall:
 
 	def input(self,choice):
 
-		string = "\nSelect from the following options:\n1. Pick your numbers\n2. Game Rules\n3. Claim your prize!\n4. Return to Homepage\n"
+		#string = "\nSelect from the following options:\n1. Pick your numbers\n2. Game Rules\n3. Claim your prize!\n4. Return to Homepage\n"
 		if self.status == 0:
 			if choice == "1":
 				self.status = 1
