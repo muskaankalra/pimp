@@ -8,6 +8,9 @@ class PowerBall:
 		self.quit = False
 		self.status = 0  # 0 means just enter into the homepage 
 
+	def getquit(self):
+		return self.quit
+		
 	def GenerateRandom(self, num):
 		randlist = []
 		for i in range(0, num):
@@ -26,22 +29,19 @@ class PowerBall:
 				response = "Number of tickets you want to buy: "
 		
 			elif choice == "2":
-				self.status = 2
 				response = "EACH GAME IS WORTH 10 BITPOINTS\n1. Select five numbers from 1 to 69 or you can also choose a 'Randomly Generated Ticket' that gives you 5 randonly generated numbers\n2. Every Monday and Thursday the PowerBall rolls and 5 random winning numbers are displayed on our home page\n3. If 3 or more of your ticket numbers match with the winning numbers on the PowerBall, you win according to the Prizes listed\n4. To claim your prize, go to our home page and choose the 'Claim Prize' option"
-	
-				
+				response = response + "\nSelect from the following options:\n1. Pick your numbers\n2. Game Rules\n3. Claim your prize!\n4. Return to Homepage\n"
+
 			elif choice == "3":
 				self.status = 3
 				response = "Enter your numbers seperated by a comma: "
-		
 
 			elif choice == "4":
-				quit = True
+				self.quit = True
 			else:
 				response = "Improper input."
 		elif self.status == 1:
 			response = "Do you want to choose your numbers? (Y)es or (N)o: "
-
 			"""
 			if (s == "Yes") or (s == "Y") or (s == "yes") or (s == "y"): 
 				lottery = input("Enter your numbers seperated by a comma: ")
@@ -54,7 +54,7 @@ class PowerBall:
 			response = "Your tickets are: {}".format(tickets)
 			"""
 		elif self.status == 3:
-			num = int(choice)
+			num = choice
 			arr = num.split(",")
 			arr = [int(i) for i in arr]
 			prize = game.CalPrize(arr)
