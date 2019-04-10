@@ -279,7 +279,8 @@ class PIMPTransport(StackingTransport):
         return(TEMP_BUFF)
     
     def close(self):
-        self.protocol.send_fin(self.protocol.seqNum,self.protocol.Server_seqNum)
+        self.protocol.send_fin(self.protocol.transport,self.protocol.seqNum,self.protocol.Server_seqNum)
+
 
 
     def write(self, data):
@@ -340,7 +341,7 @@ class PIMPServerProtocol(PIMPProtocol):
             self.transport = transport
 
         def connection_lost(self): 
-            self.send_fin(self.SeqNum, self.Client_seqNum)            
+            self.send_fin(self.transport, self.SeqNum, self.Client_seqNum)            
 
             
         def data_received(self, data):
@@ -439,7 +440,7 @@ class PIMPClientProtocol(PIMPProtocol):
                 self.Client_state = self.CLI_SENT_SYN
 
         def connection_lost(self): 
-            self.send_fin(self.seqNum, self.Server_seqNum)
+            self.send_fin(self.transport, self.seqNum, self.Server_seqNum)
 
 
         def check_timeout(self):
