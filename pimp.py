@@ -279,7 +279,7 @@ class PIMPTransport(StackingTransport):
         return(TEMP_BUFF)
     
     def close(self):
-        self.protocol.sendfin(self.protocol.seqNum,self.protocol.Server_seqNum)
+        self.protocol.send_fin(self.protocol.seqNum,self.protocol.Server_seqNum)
 
 
     def write(self, data):
