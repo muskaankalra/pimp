@@ -29,6 +29,10 @@ class Homepage():
 
     elif self.status == 2:
       self.response = self.roulette.input(string)
+      
+      if self.roulette.getquit() == True:
+        self.status = 0
+        self.response = self.homepage()
 
       if self.roulette.getquit() == True:
         self.status = 0
