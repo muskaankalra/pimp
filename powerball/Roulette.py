@@ -43,13 +43,13 @@ class Roulette:
 	def roll(self):
 		response = "\nSpinning..."
 		self.landon = random.randint(0, 36)
-		response = response + "It landed on" + str(self.landon) + "\n"
+		response = response + "It landed on " + str(self.landon) + "\n"
 		
 		return response
 
 	def lose(self):
 		response = "Oh no! You lost!"
-		response = response + "You lost" + str(self.valin) + "dollars"
+		response = response + "You lost " + str(self.valin) + "dollars"
 		self.budget -= self.valin
 		response = response + "Your budget is now "+ str(self.budget)
 
