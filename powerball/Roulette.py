@@ -51,16 +51,16 @@ class Roulette:
 		response = "Oh no! You lost!"
 		response = response + "You lost" + str(self.valin) + "dollars"
 		self.budget -= self.valin
-		response = response + "Your budget is now"+ str(self.budget)
+		response = response + "Your budget is now "+ str(self.budget)
 
 		return response
 
 	def evenwin(self):
 		if(self.landon % 2 == 0):
 			response = "Wow! You won! It was an even number!\n"
-			response = response + "You receive "+ str(self.valin*2)+ " ollars!\n"
+			response = response + "You receive "+ str(self.valin*2)+ " dollars!\n"
 			self.budget += self.valin*2
-			response = response +  "Your budget is now" + str(self.budget)
+			response = response +  "Your budget is now " + str(self.budget)
 		else:
 			response = self.lose()
 
@@ -77,7 +77,7 @@ class Roulette:
 			response = "Wow! You won! It was an odd number!\n"
 			response = response + "You receive "+ str(self.valin*2)+ " dollars!\n"
 			self.budget += self.valin*2
-			response = response +  "Your budget is now" + str(self.budget)
+			response = response +  "Your budget is now " + str(self.budget)
 		else:
 			response = self.lose()
 
@@ -93,7 +93,7 @@ class Roulette:
 			response = "Holy Cow! You won!"
 			response = response + "You receive" + str(self.valin*3)+ " dollars!\n"
 			self.budget += self.valin*3
-			response = response +  "Your budget is now" + str(self.budget)
+			response = response +  "Your budget is now " + str(self.budget)
 		else:
 			response = self.lose()
 
@@ -107,9 +107,9 @@ class Roulette:
 	def win23(self):
 		if  self.landon >= 13 and self.landon <= 25:
 			response ="Oh yeah!!! Hit the jackpot!"
-			response = response + "You receive" + str(self.valin*3)+ " dollars!\n"
+			response = response + "You receive " + str(self.valin*3)+ " dollars!\n"
 			self.budget += self.valin*3
-			response = response +  "Your budget is now" + str(self.budget)
+			response = response +  "Your budget is now " + str(self.budget)
 		else:
 			response = self.lose()
 
@@ -123,9 +123,9 @@ class Roulette:
 	def win33(self):
 		if self.landon > 25:
 			response = "Nice job...You got a number in the 3rd third! You won!"
-			response = response + "You receive" + str(self.valin*3)+ " dollars!\n"
+			response = response + "You receive " + str(self.valin*3)+ " dollars!\n"
 			self.budget += self.valin*3
-			response = response +  "Your budget is now" + str(self.budget)
+			response = response +  "Your budget is now " + str(self.budget)
 		else:
 			response = self.lose()
 
@@ -139,9 +139,9 @@ class Roulette:
 	def numwin(self):
 		if self.landon == self.valnum:
 			response = "You won! You won! You won! "+ "Congratulations!\n"
-			response = response + "You receive" + str(self.valin*36)+ " dollars!\n"
+			response = response + "You receive " + str(self.valin*36)+ " dollars!\n"
 			self.budget += self.valin*36
-			response = response +  "Your budget is now" + str(self.budget)
+			response = response +  "Your budget is now " + str(self.budget)
 		else:
 			response = self.lose()
 
@@ -155,9 +155,9 @@ class Roulette:
 	def lowwin(self):
 		if self.landon <= 18:
 			response = "Nice, you won!\n"
-			response = response + "You receive" + str(self.valin*2)+ " dollars!\n"
+			response = response + "You receive " + str(self.valin*2)+ " dollars!\n"
 			self.budget += self.valin*2
-			response = response +  "Your budget is now" + str(self.budget)
+			response = response +  "Your budget is now " + str(self.budget)
 		else:
 			response = self.lose()
 
@@ -171,9 +171,9 @@ class Roulette:
 	def highwin(self):
 		if self.landon > 18:
 			response = "Nice, you won!\n"
-			response = response + "You receive" + str(self.valin*2)+ " dollars!\n"
+			response = response + "You receive " + str(self.valin*2)+ " dollars!\n"
 			self.budget += self.valin*2
-			response = response +  "Your budget is now" + str(self.budget)
+			response = response +  "Your budget is now " + str(self.budget)
 		else:
 			response = self.lose()
 
@@ -191,7 +191,7 @@ class Roulette:
 
 		if input == 'quit':
 			self.quit = True
-			
+
 
 		response = ""
 		if self.betin == 'even':
