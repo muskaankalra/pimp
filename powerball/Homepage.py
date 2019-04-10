@@ -1,4 +1,5 @@
 from powerball import PowerBall
+from Roulette import Roulette
 
 class Homepage():
   def __init__(self):
@@ -22,12 +23,17 @@ class Homepage():
     elif self.status == 1:
       self.response = self.powerball.input(string)
 
-
       if self.powerball.getquit() == True:
         self.status = 0
         self.response = self.homepage()
- 
-          #self.response = ClientPowerBall.response
+
+    elif self.status == 2:
+      self.response = self.roulette.input(string)
+
+      if self.roulette.getquit() == True:
+        self.status = 0
+        self.response = self.homepage()
+
     else:
       self.response = "Error!!!"
 
@@ -72,6 +78,8 @@ class Homepage():
         output = self.powerball.start()
     elif userInput == "2":
         self.status = 2
+        self.roulette = Roulette()
+        output = self.roulette.start()
     elif userInput == "3":
         self.status = 3
     elif userInput == "4":
