@@ -8,6 +8,11 @@ class Roulette:
 		self.budget = 500
 		self.valnum = -1
 		self.valin = -1
+		self.quit = False
+
+	def getquit(self):
+		return self.quit
+
 
 	def betlist(self):
 		response =  "\nThe Betting List:\n--------------------"
@@ -18,6 +23,7 @@ class Roulette:
 		response = response + "\nBet on it landing on a number between 25 and 36 by typing '3rd 3rd' "
 		response = response + "\nBet on it landing on a specific number by typing the 'betnum'"
 		response = response + "\nType 'low' to bet between 0 (inclusive) and 18 (inclusive), and type 'high' to bet between 18 (exclusive) and 36 (inclusive) "
+		response = response + "\nIf u want to quit this game, just input 'quit'"
 		response = response + "\nPlace your bet: "
 		return response
 
@@ -31,6 +37,7 @@ class Roulette:
 		response = response + "\nBet on it landing on a number between 25 and 36 by typing '3rd 3rd' "
 		response = response + "\nBet on it landing on a specific number by typing the 'betnum'"
 		response = response + "\nType 'low' to bet between 0 (inclusive) and 18 (inclusive), and type 'high' to bet between 18 (exclusive) and 36 (inclusive) "
+		response = response + "\nIf u want to quit this game, just input 'quit'"
 		response = response + "\nPlace your bet: "
 		return response
 	def roll(self):
@@ -181,6 +188,10 @@ class Roulette:
 	def input(self,input):	
 		if(self.betin == "" and input.isdigit() == False):
 			self.betin = input
+
+		if input == 'quit':
+			self.quit = True
+			
 
 		response = ""
 		if self.betin == 'even':
