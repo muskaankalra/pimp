@@ -1,6 +1,6 @@
 import sys
-sys.path.append("../../../../src/reliable_layers/")
-from y20191_pimp.protocol import PimpClientProtocol, PimpServerProtocol, PIMPPacket
+#sys.path.append("../../../../src/reliable_layers/")
+from pimp.py import PIMPClientProtocol, PIMPServerProtocol, PIMPPacket
 from playground.network.testing.mock import MockTransportToStorageStream as MockTransport
 from playground.asyncio_lib.testing import TestLoopEx
 from playground.common.logging import EnablePresetLogging, PRESET_DEBUG
@@ -35,10 +35,10 @@ class TestLegalCommands(unittest.TestCase):
     def setUp(self):
         self.loop = TestLoopEx()
         asyncio.set_event_loop(self.loop)
-        self.client = PimpClientProtocol()
+        self.client = PIMPClientProtocol()
         self.client.setHigherProtocol(MagicMock())
         self.client_transport = MockTransport(PacketStream())
-        self.server = PimpServerProtocol()
+        self.server = PIMPServerProtocol()
         self.server.setHigherProtocol(MagicMock())
         self.server_transport = MockTransport(PacketStream())
         
