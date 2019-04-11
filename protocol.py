@@ -1,6 +1,6 @@
 import sys
 #sys.path.append("../../../../src/reliable_layers/")
-from pimp.py import PIMPClientProtocol, PIMPServerProtocol, PIMPPacket
+from pimp import PIMPClientProtocol, PIMPServerProtocol, PIMPPacket
 from playground.network.testing.mock import MockTransportToStorageStream as MockTransport
 from playground.asyncio_lib.testing import TestLoopEx
 from playground.common.logging import EnablePresetLogging, PRESET_DEBUG
