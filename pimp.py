@@ -400,6 +400,7 @@ class PIMPServerProtocol(PIMPProtocol):
                         self.Client_seqNum = pkt.seqNum + len(pkt.data)
                         self.send_Ack(self.transport, self.SeqNum, self.Client_seqNum)
                         self.Server_state = LISTEN
+                        self.transport.close()
 
                         #self.Server_state = LISTEN
 
@@ -520,6 +521,7 @@ class PIMPClientProtocol(PIMPProtocol):
                         self.Server_seqNum = pkt.seqNum + len(pkt.data)
                         self.send_Ack(self.transport, self.seqNum, self.Server_seqNum)
                         self.Client_state = CLI_CLOSED
+                        self.transport.close()
 
                     elif pkt.ACK == True and self.Client_state == self.CLI_ClOSING:
                         self.CLIENT = CLI_CLOSED
