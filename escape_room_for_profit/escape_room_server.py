@@ -5,8 +5,8 @@ from escape_room_packets import RequestGame, GameRequest, GameResponse
 import asyncio, os, pickle
 
 from playground.common.CipherUtil import loadCertFromFile, RSA_SIGNATURE_MAC
-from BitPoints-Bank-Playground3.src.BankCore import LedgerLineStorage, LedgerLine
-from BitPoints-Bank-Playground3.src.OnlineBankConfig import OnlineBankConfig
+from BankCore import LedgerLineStorage, LedgerLine
+from OnlineBankConfig import OnlineBankConfig
 
 import playground
 from playground.network.packet import PacketType
