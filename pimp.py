@@ -117,7 +117,7 @@ class PIMPPacket(PacketType):                       #Packet Definitions
         pkt.data = data
         pkt.checkSum = b'0'
         pkt.updateChecksum()
-        print("!!!!!!!!!!!!!!!!!!!!!!!!SENT DATA PACKET !!!!!!!!!!!!!!!!!!!!!!!!!" + "Seq="+str(pkt.seqNum) + "Ack="+str(pkt.ackNum)+ "      " + str(pkt.checkSum))
+        print("!!!!!!!!!!!!!!!!!!!!!!!!SENT DATA PACKET !!!!!!!!!!!!!!!!!!!!!!!!!" + "Seq="+str(pkt.seqNum) + "Ack="+str(pkt.ackNum)+ "      " + str(len(pkt.data)) )
         return pkt
 
     @classmethod
@@ -264,7 +264,6 @@ class PIMPProtocol(StackingProtocol):
             self.resend_flag = False
         elif self.resend_flag == True and self.SER_ESTABLISHED:
             self.resend_flag = False
-                #retransmission
             pass
         else:
             pass
@@ -278,7 +277,7 @@ class PIMPTransport(StackingTransport):
 
 
         
-    def pack(self,length, data): #Method to make packets and return it in a buffer
+    def pack(self,length, data):
         PacketSize = 4000
         leed = 0
         end = PacketSize
@@ -294,25 +293,16 @@ class PIMPTransport(StackingTransport):
     def write(self, data):
         #pkt = PIMPPacket()
         length = len(data)
-        #print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!data!!!!!!!!!!!!!!!!"+ str(length) + "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"+ str(data))
         BUFF = []
-        #print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@2")
         global SC_flag
         
-        if length <= 4000:  #Temporary Size
-            BUFF = data
-            #print(BUFF)
+        if length <= 4000: 
+            self.send_data(self.transport, data)
         
         else:
             BUFF = self.pack(length, data)
-            #print(BUFF)
-
-
-        for d in BUFF: #### SEND DATA WITH DIFFERENT SEQ NUMBER FOR EACH PACKET SENT
-            arr = bytes(str(d), 'utf-8')
-            #print("#@$@#%#$@^#$^&#$&^#$")
-            #print("I am HERE jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj" + str(len(arr)))
-            self.send_data(self.transport, arr)
+            for d in BUFF: 
+                self.send_data(self.transport, d)
 
 
 class PIMPServerProtocol(PIMPProtocol):
@@ -386,8 +376,8 @@ class PIMPServerProtocol(PIMPProtocol):
                         #print(self.ServerRxWindow)
                         self.SeqNum = pkt.ackNum 
                         self.Client_seqNum = pkt.seqNum + len(pkt.data)
-                        #print("\n")
-                        #print(len(self.ServerRxWindow))
+                        print("Server sequence number updated" + str(self.SeqNum))
+                        print("Server ACk number updated" + str(self.Client_seqNum) + "\n")
                         #for j in self.ServerRxWindow:
                          #   print(j)
                         #print("\n!!!!!!!!!!!!!!!!!DATA PACKET RECIEVED!!!!!!!!!!!!!!!!!!!!\n")
@@ -515,3 +505,5 @@ class PIMPClientProtocol(PIMPProtocol):
 
 PIMPClientFactory = StackingProtocolFactory.CreateFactoryType(lambda: PIMPClientProtocol())
 PIMPServerFactory = StackingProtocolFactory.CreateFactoryType(lambda: PIMPServerProtocol())
+
+
