@@ -2,8 +2,8 @@ from escape_room_packets import RequestAdmission, ProofOfPayment, PaymentResult
 from escape_room_packets import RequestGame, GameRequest, GameResponse
 
 import asyncio, sys, getpass, os, playground
-from BitPoints-Bank-Playground3.src.OnlineBank import BankClientProtocol
-from BitPoints-Bank-Playground3.src.OnlineBankConfig import OnlineBankConfig
+from OnlineBank import BankClientProtocol
+from OnlineBankConfig import OnlineBankConfig
 from playground.network.packet import PacketType
 from playground.common.CipherUtil import loadCertFromFile
 
