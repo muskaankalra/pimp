@@ -343,7 +343,7 @@ class PIMPServerProtocol(PIMPProtocol):
 
         def processFinpacket(self,pkt):
             self.SeqNum = pkt.ackNum 
-            self.Client_seqNum = pkt.seqNum + len(pkt.data)
+            self.Client_seqNum = pkt.seqNum + 1
             self.send_finAck(self.transport, self.SeqNum, self.Client_seqNum)
             self.Server_state = SER_CLOSING
             self.higherProtocol.connection_lost()
@@ -470,7 +470,7 @@ class PIMPClientProtocol(PIMPProtocol):
 
         def processFinpacket(self, pkt):
             self.seqNum = pkt.ackNum 
-            self.Server_seqNum = pkt.seqNum + len(pkt.data)
+            self.Server_seqNum = pkt.seqNum + 1
             self.send_finAck(self.transport, self.seqNum, self.Server_seqNum)
             self.Client_state = CLI_ClOSING
             self.higherProtocol.connection_lost()
