@@ -28,7 +28,7 @@ class HomepageServerProtocol(asyncio.Protocol):
 loop = asyncio.get_event_loop()
 
 # Each client connection will create a new protocol instance
-coro = playground.create_server(HomepageServerProtocol, '20191.157.157.156', 9090)
+coro = playground.create_server(HomepageServerProtocol, '20191.157.157.157', 9090)
 
 server = loop.run_until_complete(coro)
 
