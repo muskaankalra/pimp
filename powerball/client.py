@@ -34,6 +34,6 @@ loop.add_reader(sys.stdin, stdinAlert)
 message = stdinAlert()
 
 coro = playground.create_connection(lambda: HomepageClientProtocol(message, loop),
-                              '20191.157.156.156', 9092)
+                              '20191.157.157.157', 9092)
 loop.run_until_complete(coro)
 loop.run_forever()
