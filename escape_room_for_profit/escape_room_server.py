@@ -17,7 +17,7 @@ class PaymentProcessing:
         self._bankconfig = OnlineBankConfig()
         
         # TODO: This is hard coded. It needs to be changed to be part of the ini
-        certPath = os.path.join(self._bankconfig.path(), "bank.cert")
+        certPath = os.path.join(self._bankconfig.path(), "20191_bank_signed.cert")
         
         
         self._cert = loadCertFromFile(certPath)
