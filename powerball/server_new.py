@@ -6,8 +6,8 @@ from packets import RequestGame, GameRequest, GameResponse
 import asyncio, os, pickle
 
 from playground.common.CipherUtil import loadCertFromFile, RSA_SIGNATURE_MAC
-from BitPoints-Bank-Playground3.sr.BankCore import LedgerLineStorage, LedgerLine
-from BitPoints-Bank-Playground3.sr.OnlineBankConfig import OnlineBankConfig
+from BankCore import LedgerLineStorage, LedgerLine
+from OnlineBankConfig import OnlineBankConfig
 
 import playground
 from playground.network.packet import PacketType
