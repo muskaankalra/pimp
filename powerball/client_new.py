@@ -170,26 +170,11 @@ if __name__=="__main__":
     global_payment_processor.set_src_account(args.account)
     
     loop = asyncio.get_event_loop()
-    coro = playground.create_connection(EscapeRoomClientProtocol, host=host, port=port)
+    coro = playground.create_connection(HomepageClientProtocol, host=host, port=port)
     transport, protocol = loop.run_until_complete(coro)
     print("connected",protocol,transport)
     loop.add_reader(sys.stdin, stdin_reader)
     loop.run_forever()
     loop.close()
 
-        
-"""
-def stdinAlert():
-    lines = sys.stdin.readline()
-    return lines
 
-loop = asyncio.get_event_loop()
-
-loop.add_reader(sys.stdin, stdinAlert)
-
-message = stdinAlert()
-
-coro = playground.create_connection(lambda: HomepageClientProtocol(message, loop),
-                              '20191.10.20.30', 6261)
-loop.run_until_complete(coro)
-loop.run_forever()
